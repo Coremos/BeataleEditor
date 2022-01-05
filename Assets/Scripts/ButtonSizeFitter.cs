@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 [ExecuteAlways]
 [RequireComponent(typeof(RectTransform))]
-public class ButtonSizeFitter : MonoBehaviour
+public class ButtonSizeFitter : EditorBehaviour
 {
     public enum FitMode { Unconstrained, PrefferedSize };
     public FitMode HorizontalFit;
@@ -44,10 +44,12 @@ public class ButtonSizeFitter : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         EditorApplication.delayCall += _OnValidate;
     }
+#endif
 
     private void _OnValidate()
     {
