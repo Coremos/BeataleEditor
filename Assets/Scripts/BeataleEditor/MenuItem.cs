@@ -4,16 +4,9 @@ using UnityEngine;
 
 namespace Editor
 {
+    [RequireComponent(typeof(RectTransform))]
     public class MenuItem : MonoBehaviour
     {
-        void Start()
-        {
 
-        }
-
-        void Update()
-        {
-
-        }
     }
 }
