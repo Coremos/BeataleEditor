@@ -4,7 +4,7 @@ namespace BeataleEditor
 {
     public class RectTransformEvent : MonoBehaviour
     {
-        private RectTransform rectTransform;
+        protected RectTransform rectTransform;
         private bool isRectangleContainsMouse;
 
         protected virtual void Awake()
@@ -38,6 +38,11 @@ namespace BeataleEditor
 
         public virtual void OnMouseExit()
         {
+        }
+
+        public Vector2 GetMousePosition()
+        {
+            return Mouse.Position - rectTransform.anchoredPosition;
         }
 
         public bool IsRectangleContainsMouse()
