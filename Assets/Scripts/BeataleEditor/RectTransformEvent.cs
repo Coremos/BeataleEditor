@@ -24,12 +24,19 @@ namespace BeataleEditor
                 else OnMouseExit();
             }
 
-            if (isRectangleContainsMouse) OnMouseOver();
+            if (isRectangleContainsMouse)
+            {
+                OnMouseOver();
+                if (Mouse.DeltaPosition != Vector2.zero)
+                {
+                    OnMouseDrag();
+                }
+            }
         }
 
+        #region VirtualMethods
         public virtual void OnMouseOver()
         {
-            
         }
 
         public virtual void OnMouseEnter()
@@ -39,6 +46,11 @@ namespace BeataleEditor
         public virtual void OnMouseExit()
         {
         }
+
+        public virtual void OnMouseDrag()
+        {
+        }
+        #endregion
 
         public Vector2 GetMousePosition()
         {
