@@ -10,10 +10,10 @@ namespace BeataleEditor
 {
     class TimeLine : RectTransformEvent
     {
+        public TunerManager TunerManager;
         public GameObject TimeLineMarkGameObject;
         public GameObject NotePrefab;
         private RectTransform timeLineMarkRectTransform;
-        private Chart chart;
 
         public float areaStart;
         public float areaEnd;
@@ -25,7 +25,7 @@ namespace BeataleEditor
         protected override void Awake()
         {
             base.Awake();
-            timeLineMarkRectTransform = GetComponent<RectTransform>();
+            timeLineMarkRectTransform = TimeLineMarkGameObject.GetComponent<RectTransform>();
             Factor = 100.0f;
         }
 
@@ -46,17 +46,26 @@ namespace BeataleEditor
             }
         }
 
-        public float GetPercentage()
+        private float GetPercentage()
         {
             var position = GetMousePosition();
             return (position.x / rectTransform.sizeDelta.x);
         }
 
+        private void UpdateScroll()
+        {
+            float scroll = Input.GetAxis("Mouse ScrollWheel") * 10.0f;
+            if (scroll != 0)
+            {
+
+            }
+        }
+
         public void UpdateNote()
         {
-            for (int index = 0; index < chart.Notes.Count; index++)
+            for (int index = 0; index < TunerManager.Chart.Notes.Count; index++)
             {
-                if (chart.Notes[index] == null) continue;
+                if (TunerManager.Chart.Notes[index] == null) continue;
 
             }
         }
@@ -66,7 +75,7 @@ namespace BeataleEditor
             var noteObject = Instantiate(NotePrefab);
             var note = new Note();
             
-            chart.Notes.Add(note);
+            TunerManager.Chart.Notes.Add(note);
         }
 
         public void InitializeNote()

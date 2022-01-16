@@ -15,9 +15,10 @@ namespace Beatale
             public string Name;
             public float BPM;
             public string Artist;
-            public string Patterner;
+            public string Pattern;
             public List<Note> Notes;
             public List<LongNote> LongNotes;
+            public List<BPMChange> BPMChanges;
         }
 
         public enum NoteType { None = -1, Tap, Long }
@@ -57,6 +58,13 @@ namespace Beatale
             {
 
             }
+        }
+
+        public class BPMChange
+        {
+            public float Time;
+            public GameObject TunerObject;
+            public float BPM;
         }
     }
 
