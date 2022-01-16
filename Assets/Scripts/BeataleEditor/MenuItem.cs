@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Editor
+namespace BeataleEditor
 {
     [RequireComponent(typeof(RectTransform))]
     public class MenuItem : MonoBehaviour
