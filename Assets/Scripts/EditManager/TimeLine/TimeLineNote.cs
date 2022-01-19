@@ -1,6 +1,4 @@
 using BeataleEditor;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TimeLineNote : RectTransformEvent
@@ -17,7 +15,8 @@ public class TimeLineNote : RectTransformEvent
 
     public override void OnMouseDrag()
     {
-        
+        Vector2 mousePosition = GetMousePosition();
+        rectTransform.anchoredPosition = new Vector2(mousePosition.x, rectTransform.anchoredPosition.y);
+        Debug.Log("드래그중");
     }
-
 }

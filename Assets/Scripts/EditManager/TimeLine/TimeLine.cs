@@ -1,9 +1,4 @@
 ﻿using Beatale.Chart;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace BeataleEditor
@@ -13,6 +8,7 @@ namespace BeataleEditor
         public TunerManager TunerManager;
         public GameObject TimeLineMarkGameObject;
         public GameObject NotePrefab;
+        public RectTransform RectT;
         private RectTransform timeLineMarkRectTransform;
 
         public float areaStart;
@@ -32,10 +28,7 @@ namespace BeataleEditor
         protected override void Update()
         {
             base.Update();
-            if (Input.GetMouseButton(1))
-            {
-
-            }
+            
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 Factor += 1f;
@@ -44,6 +37,14 @@ namespace BeataleEditor
             {
                 Factor -= 1f;
             }
+            //Debug.Log(Time.deltaTime + " : " + RectT.anchoredPosition);
+        }
+
+        private void CreateNote()
+        {
+            var note = Instantiate(NotePrefab, RectT);
+            //Debug.Log(GetMousePosition() + " / " + RectT.anchoredPosition);
+            ((RectTransform)note.transform).anchoredPosition = new Vector2(GetMousePosition().x - RectT.anchoredPosition.x, 0);
         }
 
         private float GetPercentage()
@@ -90,6 +91,10 @@ namespace BeataleEditor
 
         public override void OnMouseOver()
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                CreateNote();
+            }
             timeLineMarkRectTransform.anchoredPosition = new Vector2(GetMousePosition().x, timeLineMarkRectTransform.anchoredPosition.y);
         }
 
