@@ -1,37 +1,38 @@
-using BeataleEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TimeLineNote : RectTransformEvent
+namespace BeataleEditor
 {
-    private Vector2 mousePosition;
-    private Vector2 lastPosition;
-    protected override void Awake()
+    namespace TimeLine
     {
-        base.Awake();
-    }
+        public class TimeLineNote : RectTransformEvent
+        {
+            public TimeLineManager TimeLineManager;
+            private Vector2 mousePosition;
+            private Vector2 lastPosition;
 
-    protected override void Update()
-    {
-        base.Update();
-    }
+            protected override void Awake()
+            {
+                base.Awake();
+            }
 
-    public override void OnBeginDrag(PointerEventData eventData)
-    {
-        Debug.Log("OnBeginDrag");
-        mousePosition = Mouse.Position;
-        lastPosition = rectTransform.anchoredPosition;
-    }
+            public override void OnPointerDown(PointerEventData eventData)
+            {
+                TimeLineManager.SelectNote(this);
 
-    public override void OnDrag(PointerEventData eventData)
-    {
-        rectTransform.anchoredPosition = lastPosition + new Vector2(Mouse.Position.x - mousePosition.x, 0);
-    }
+                mousePosition = Mouse.Position;
+                lastPosition = rectTransform.anchoredPosition;
+            }
 
-    //public override void OnMouseDrag()
-    //{
-    //    Vector2 mousePosition = GetMousePosition();
-    //    rectTransform.anchoredPosition = new Vector2(mousePosition.x, rectTransform.anchoredPosition.y);
-    //    Debug.Log("드래그중");
-    //}
+            public override void OnPointerClick(PointerEventData eventData)
+            {
+            }
+
+            public override void OnDrag(PointerEventData eventData)
+            {
+                TimeLineManager.DragNote();
+                rectTransform.anchoredPosition = lastPosition + new Vector2(Mouse.Position.x - mousePosition.x, 0);
+            }
+        }
+    }
 }

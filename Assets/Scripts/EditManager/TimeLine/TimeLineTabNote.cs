@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeLineTabNote : TimeLineNote
+namespace BeataleEditor
 {
+    namespace TimeLine
+    {
+        public class TimeLineTabNote : TimeLineNote
+        {
+        }
+    }
 }

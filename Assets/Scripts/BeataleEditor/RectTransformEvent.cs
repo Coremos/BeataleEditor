@@ -3,55 +3,16 @@ using UnityEngine.EventSystems;
 
 namespace BeataleEditor
 {
-    public class RectTransformEvent : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class RectTransformEvent : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         protected RectTransform rectTransform;
-        private bool isRectangleContainsMouse;
 
         protected virtual void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
-            isRectangleContainsMouse = false;
-        }
-
-        protected virtual void Update()
-        {
-            var lastRectangleContainsMouse = isRectangleContainsMouse;
-            isRectangleContainsMouse = IsRectangleContainsMouse();
-
-            if (lastRectangleContainsMouse != isRectangleContainsMouse)
-            {
-                if (isRectangleContainsMouse) OnMouseEnter();
-                else OnMouseExit();
-            }
-
-            if (isRectangleContainsMouse)
-            {
-                OnMouseOver();
-                if (Mouse.DeltaPosition != Vector2.zero)
-                {
-                    OnMouseDrag();
-                }
-            }
         }
 
         #region VirtualMethods
-        public virtual void OnMouseOver()
-        {
-        }
-
-        public virtual void OnMouseEnter()
-        {
-        }
-
-        public virtual void OnMouseExit()
-        {
-        }
-
-        public virtual void OnMouseDrag()
-        {
-        }
-
         public virtual void OnPointerDown(PointerEventData eventData)
         {
         }
@@ -66,6 +27,19 @@ namespace BeataleEditor
 
         public virtual void OnDrag(PointerEventData eventData)
         {
+        }
+
+        public virtual void OnPointerUp(PointerEventData eventData)
+        {
+        }
+
+        public virtual void OnPointerExit(PointerEventData eventData)
+        {
+        }
+
+        public virtual void OnPointerClick(PointerEventData eventData)
+        {
+
         }
         #endregion
 
@@ -90,7 +64,5 @@ namespace BeataleEditor
             return (Mouse.Position.y <= rectTransform.anchoredPosition.y &&
                 Mouse.Position.y >= rectTransform.anchoredPosition.y - rectTransform.sizeDelta.y);
         }
-
-        
     }
 }
