@@ -32,7 +32,7 @@ namespace BeataleEditor
         {
             var lastPosition = Position;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, Input.mousePosition, null, out Position);
-            DeltaPosition = Position - DeltaPosition;
+            DeltaPosition = Position - lastPosition;
         }
 
         public static void SetCursor(CursorType type)

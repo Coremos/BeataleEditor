@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BeataleEditor
 {
-    public class RectTransformEvent : MonoBehaviour
+    public class RectTransformEvent : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         protected RectTransform rectTransform;
         private bool isRectangleContainsMouse;
@@ -50,6 +51,22 @@ namespace BeataleEditor
         public virtual void OnMouseDrag()
         {
         }
+
+        public virtual void OnPointerDown(PointerEventData eventData)
+        {
+        }
+
+        public virtual void OnBeginDrag(PointerEventData eventData)
+        {
+        }
+
+        public virtual void OnEndDrag(PointerEventData eventData)
+        {
+        }
+
+        public virtual void OnDrag(PointerEventData eventData)
+        {
+        }
         #endregion
 
         public Vector2 GetMousePosition()
@@ -73,5 +90,7 @@ namespace BeataleEditor
             return (Mouse.Position.y <= rectTransform.anchoredPosition.y &&
                 Mouse.Position.y >= rectTransform.anchoredPosition.y - rectTransform.sizeDelta.y);
         }
+
+        
     }
 }

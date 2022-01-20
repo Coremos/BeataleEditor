@@ -8,6 +8,7 @@ namespace BeataleEditor
         public TunerManager TunerManager;
         public GameObject TimeLineMarkGameObject;
         public GameObject NotePrefab;
+        public RectTransform ContentRect;
         public RectTransform RectT;
         private RectTransform timeLineMarkRectTransform;
 
