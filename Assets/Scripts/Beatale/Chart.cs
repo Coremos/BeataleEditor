@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Beatale
 {
-    namespace Chart
+    namespace ChartSystem
     {
         public class Chart
         {
@@ -28,7 +28,7 @@ namespace Beatale
             public float Time;
             public float Degree;
             public GameObject TimeLineObject;
-            public GameObject TunerObject;
+            public GameObject TunnelObject;
 
             public Note()
             {
