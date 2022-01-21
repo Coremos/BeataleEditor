@@ -40,6 +40,5 @@ namespace Beatale
                 denominator = (int)division;
             }
         }
-    
-}
+    }
 }

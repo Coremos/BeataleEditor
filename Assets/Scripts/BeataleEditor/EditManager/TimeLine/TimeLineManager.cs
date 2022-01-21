@@ -12,8 +12,8 @@ namespace BeataleEditor
         {
             public TunnelManager TunnelManager;
             public GameObject NotePrefab;
-            public RectTransform ContentRect;
             public GameObject TimeLineMark;
+            public RectTransform ContentRect;
 
             private List<TimeLineNote> SelectedNotes;
 

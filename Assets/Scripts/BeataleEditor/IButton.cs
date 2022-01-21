@@ -1,4 +1,4 @@
-﻿namespace Editor
+﻿namespace BeataleEditor
 {
     namespace Button
     {
