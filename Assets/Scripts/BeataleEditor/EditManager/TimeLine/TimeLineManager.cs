@@ -1,4 +1,5 @@
 ﻿using Beatale.ChartSystem;
+using Beatale.TunnelSystem;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,7 +10,7 @@ namespace BeataleEditor
     {
         public class TimeLineManager : RectTransformEvent
         {
-            public TunnelManager TunerManager;
+            public TunnelManager TunnelManager;
             public GameObject NotePrefab;
             public RectTransform ContentRect;
             public GameObject TimeLineMark;
@@ -72,9 +73,9 @@ namespace BeataleEditor
 
             public void UpdateNote()
             {
-                for (int index = 0; index < TunerManager.Chart.Notes.Count; index++)
+                for (int index = 0; index < TunnelManager.Chart.Notes.Count; index++)
                 {
-                    if (TunerManager.Chart.Notes[index] == null) continue;
+                    if (TunnelManager.Chart.Notes[index] == null) continue;
                 }
             }
 
