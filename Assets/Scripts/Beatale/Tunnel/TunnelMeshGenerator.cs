@@ -17,21 +17,15 @@ namespace Beatale
             private static readonly float DEFAULT_RADIUS = 1;
             private static readonly float DEFAULT_HEIGHT = 5;
 
-
             public int RadialSegments = DEFAULT_RADIAL_SEGMENTS;
             public int HeightSegments = DEFAULT_HEIGHT_SEGMENTS;
             public float Radius = DEFAULT_RADIUS;
             public float Height = DEFAULT_HEIGHT;
 
             private Mesh tunnelMesh;
-            private Mesh mesh;
             private MeshFilter meshFilter;
 
-            private void Awake()
-            {
-            }
-
-            public void CreateTunnelMesh()
+            public void GenerateTunnelMesh()
             {
                 tunnelMesh = new Mesh();
                 tunnelMesh.name = "TunnelMesh";
@@ -50,58 +44,37 @@ namespace Beatale
                 float uvWidthStep = 1.0f / RadialSegments;
                 float uvHeightStep = 1.0f / HeightSegments;
 
+                int columnVertexAmount = RadialSegments + 1;
+
                 for (int row = 0; row <= HeightSegments; row++)
                 {
-                    for (int column = 0; column < RadialSegments; column++)
+                    for (int column = 0; column <= RadialSegments; column++)
                     {
                         float angle = angleStep * column;
 
                         vertices.Add(new Vector3(row * heightStep, Radius * Mathf.Cos(angle), Radius * Mathf.Sin(angle)));
-                        uvs.Add(new Vector2(1 - column * uvWidthStep, row * uvHeightStep));
+                        uvs.Add(new Vector2(column * uvWidthStep, row * uvHeightStep));
 
                         if (row == 0 || column >= RadialSegments) continue;
 
-                        //triangles.Add();
+                        triangles.Add(row * columnVertexAmount + column);
+                        triangles.Add(row * columnVertexAmount + column + 1);
+                        triangles.Add((row - 1) * columnVertexAmount + column);
+
+                        triangles.Add((row - 1) * columnVertexAmount + column);
+                        triangles.Add(row * columnVertexAmount + column + 1);
+                        triangles.Add((row - 1) * columnVertexAmount + column + 1);
                     }
                 }
 
                 tunnelMesh.vertices = vertices.ToArray();
                 tunnelMesh.triangles = triangles.ToArray();
                 tunnelMesh.uv = uvs.ToArray();
-            }
 
-            void Start()
-            {
-
-            }
-
-            // Update is called once per frame
-            void Update()
-            {
-
+                tunnelMesh.RecalculateNormals();
+                tunnelMesh.RecalculateBounds();
+                tunnelMesh.RecalculateTangents();
             }
         }
-
-#if UNITY_EDITOR
-        [CustomEditor(typeof(TunnelMeshGenerator))]
-        public class TunnelMeshGeneratorEditor : Editor
-        {
-            public override void OnInspectorGUI()
-            {
-                TunnelMeshGenerator obj;
-                obj = target as TunnelMeshGenerator;
-                if (obj == null)
-                {
-                    return;
-                }
-
-                DrawDefaultInspector();
-                if (GUI.changed)
-                {
-                    obj.CreateTunnelMesh();
-                }
-            }
-        }
-#endif
     }
 }
