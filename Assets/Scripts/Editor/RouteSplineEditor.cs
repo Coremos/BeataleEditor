@@ -13,7 +13,7 @@ public class RouteSplineEditor : Editor
     {
         Tools.current = Tool.None;
         var spline = (RouteSpline)target;
-        Handles.DrawLine(new Vector3(10, 10, 10), new Vector3(20, 20, 20));
+        //Handles.DrawLine(new Vector3(10, 10, 10), new Vector3(20, 20, 20));
     }
 
     private void OnEnable()

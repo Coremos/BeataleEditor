@@ -14,6 +14,7 @@ namespace Beatale.Route
         private void OnDrawGizmos()
         {
             Gizmos.color = RouteColor;
+            Gizmos.color = Color.red;
             Resolution = 1;
             DrawSpline();
         }
@@ -43,6 +44,7 @@ namespace Beatale.Route
             {
                 nextPoint = GetPoint(vertex1, vertex2, resolutionStep * index);
                 Gizmos.DrawLine(currentPoint, nextPoint);
+                Debug.Log("index" + index + " / " + currentPoint + " : " + nextPoint);
                 //Handles.DrawBezier(vertex1.Position, vertex2.Position, vertex1.Direction2, vertex2.Direction1, RouteColor, )
                 currentPoint = nextPoint;
             }
@@ -60,7 +62,6 @@ namespace Beatale.Route
 
             }
             Vector3 point = Vector3.zero;
-            Debug.Log(vertex1.Position +" / " + vertex2.Position);
             return GetLinearPoint(vertex1.Position, vertex2.Position, t);
         }
 

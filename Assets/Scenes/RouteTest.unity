@@ -438,5 +438,5 @@ MonoBehaviour:
   - {fileID: 2019280095}
   - {fileID: 2122196161}
   RouteColor: {r: 0, g: 0, b: 0, a: 0}
-  Resolution: 0
+  Resolution: 5
   IsLoop: 0
