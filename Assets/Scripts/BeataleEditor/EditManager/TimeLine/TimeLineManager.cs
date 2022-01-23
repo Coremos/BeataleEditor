@@ -4,122 +4,119 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace BeataleEditor
+namespace BeataleEditor.TimeLine
 {
-    namespace TimeLine
+    public class TimeLineManager : RectTransformEvent
     {
-        public class TimeLineManager : RectTransformEvent
+        public TunnelManager TunnelManager;
+        public GameObject NotePrefab;
+        public GameObject TimeLineMark;
+        public RectTransform ContentRect;
+
+        private List<TimeLineNote> SelectedNotes;
+
+        public float areaStart;
+        public float areaEnd;
+        public float ViewStart;
+        public float ViewEnd;
+        public float ViewLength;
+        public float Factor;
+
+        protected override void Awake()
         {
-            public TunnelManager TunnelManager;
-            public GameObject NotePrefab;
-            public GameObject TimeLineMark;
-            public RectTransform ContentRect;
+            base.Awake();
+            SelectedNotes = new List<TimeLineNote>();
+            Factor = 100.0f;
+        }
 
-            private List<TimeLineNote> SelectedNotes;
-
-            public float areaStart;
-            public float areaEnd;
-            public float ViewStart;
-            public float ViewEnd;
-            public float ViewLength;
-            public float Factor;
-
-            protected override void Awake()
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                base.Awake();
-                SelectedNotes = new List<TimeLineNote>();
-                Factor = 100.0f;
+                Factor += 1f;
             }
-
-            private void Update()
+            if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    Factor += 1f;
-                }
-                if (Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    Factor -= 1f;
-                }
-                //Debug.Log(Time.deltaTime + " : " + RectT.anchoredPosition);
+                Factor -= 1f;
             }
+            //Debug.Log(Time.deltaTime + " : " + RectT.anchoredPosition);
+        }
 
-            public void SelectNote(TimeLineNote note)
+        public void SelectNote(TimeLineNote note)
+        {
+            if (SelectedNotes.Contains(note))
             {
-                if (SelectedNotes.Contains(note))
-                {
-                    SelectedNotes.Remove(note);
-                }
-                else
-                {
-                    SelectedNotes.Add(note);
-                }
+                SelectedNotes.Remove(note);
             }
-            
-            private float GetPercentage()
+            else
             {
-                var position = GetMousePosition();
-                return (position.x / rectTransform.sizeDelta.x);
+                SelectedNotes.Add(note);
             }
+        }
 
-            private void UpdateScroll()
-            {
-                float scroll = Input.GetAxis("Mouse ScrollWheel") * 10.0f;
-                if (scroll != 0)
-                {
+        private float GetPercentage()
+        {
+            var position = GetMousePosition();
+            return (position.x / rectTransform.sizeDelta.x);
+        }
 
-                }
-            }
-
-            public void UpdateNote()
-            {
-                for (int index = 0; index < TunnelManager.Chart.Notes.Count; index++)
-                {
-                    if (TunnelManager.Chart.Notes[index] == null) continue;
-                }
-            }
-
-            public void AddNote()
-            {
-                var noteObject = Instantiate(NotePrefab, ContentRect);
-                noteObject.GetComponent<TimeLineNote>().TimeLineManager = this;
-                ((RectTransform)noteObject.transform).anchoredPosition = new Vector2(GetMousePosition().x - ContentRect.anchoredPosition.x, 0);
-
-
-                var note = new Note();
-                note.TimeLineObject = noteObject;
-
-                //TunerManager.Chart.Notes.Add(note);
-            }
-
-            public void DragNote()
+        private void UpdateScroll()
+        {
+            float scroll = Input.GetAxis("Mouse ScrollWheel") * 10.0f;
+            if (scroll != 0)
             {
 
             }
+        }
 
-            public void InitializeNotes()
+        public void UpdateNote()
+        {
+            for (int index = 0; index < TunnelManager.Chart.Notes.Count; index++)
             {
-
+                if (TunnelManager.Chart.Notes[index] == null) continue;
             }
+        }
 
-            public override void OnPointerUp(PointerEventData eventData)
+        public void AddNote()
+        {
+            var noteObject = Instantiate(NotePrefab, ContentRect);
+            noteObject.GetComponent<TimeLineNote>().TimeLineManager = this;
+            ((RectTransform)noteObject.transform).anchoredPosition = new Vector2(GetMousePosition().x - ContentRect.anchoredPosition.x, 0);
+
+
+            var note = new Note();
+            note.TimeLineObject = noteObject;
+
+            //TunerManager.Chart.Notes.Add(note);
+        }
+
+        public void DragNote()
+        {
+
+        }
+
+        public void InitializeNotes()
+        {
+
+        }
+
+        public override void OnPointerUp(PointerEventData eventData)
+        {
+        }
+
+        public override void OnPointerDown(PointerEventData eventData)
+        {
+            if (Input.GetMouseButtonDown(0))
             {
+                AddNote();
             }
+            TimeLineMark.SetActive(true);
+            ((RectTransform)TimeLineMark.transform).anchoredPosition = new Vector2(GetMousePosition().x, ((RectTransform)TimeLineMark.transform).anchoredPosition.y);
+        }
 
-            public override void OnPointerDown(PointerEventData eventData)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    AddNote();
-                }
-                TimeLineMark.SetActive(true);
-                ((RectTransform)TimeLineMark.transform).anchoredPosition = new Vector2(GetMousePosition().x, ((RectTransform)TimeLineMark.transform).anchoredPosition.y);
-            }
-
-            public override void OnPointerExit(PointerEventData eventData)
-            {
-                //TimeLineMark.SetActive(false);
-            }
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            //TimeLineMark.SetActive(false);
         }
     }
 }
