@@ -30,7 +30,7 @@ namespace Beatale.Route
             }
         }
 
-        public Vector3 direction2;
+        private Vector3 direction2;
         public Vector3 Direction2
         {
             get { return direction2; }
