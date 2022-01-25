@@ -57,13 +57,20 @@ public class RouteSplineEditor : Editor
 
     private void DrawVertex(RouteVertex vertex)
     {
-        vertex.Position = DrawPositionHandle(vertex.transform);
-        //vertex.Direction1 = DrawCircleHandle(vertex.Direction1);
+        var handlePosition = DrawPositionHandle(vertex.transform);
+        if (handlePosition != vertex.Position)
+        {
+            Undo.RecordObject(vertex.transform, "MoveVertex");
+            vertex.Position = handlePosition;
+        }
+
+        //DrawCircleHandle(vertex.Direction1);
     }
 
     private Vector3 DrawPositionHandle(Transform transform)
     {
         Vector3 position;
+
         Handles.color = Handles.xAxisColor;
         position.x = Handles.Slider(transform.position, transform.right).x;
 
@@ -72,11 +79,7 @@ public class RouteSplineEditor : Editor
 
         Handles.color = Handles.zAxisColor;
         position.z = Handles.Slider(transform.position, transform.forward).z;
-        if (position != transform.position)
-        {
-            Undo.RecordObject(transform, "MoveVertex");
-            transform.position = position;
-        }
+
         return position;
     }
 
@@ -100,8 +103,11 @@ public class RouteSplineEditor : Editor
         serializedObject.Update();
         DrawProperties();
         reorderableList.DoLayoutList();
-        serializedObject.ApplyModifiedProperties();
-        EditorUtility.SetDirty(target);
+        if (GUI.changed)
+        {
+            serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(target);
+        }
     }
 
     private void AddVertex()
