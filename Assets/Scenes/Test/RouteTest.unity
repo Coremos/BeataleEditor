@@ -520,7 +520,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122196160}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.94, y: 5.3001614, z: 4.7783527}
+  m_LocalPosition: {x: 0.94, y: 5.3001614, z: 4.704095}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2125825090}
@@ -578,6 +578,6 @@ MonoBehaviour:
   - {fileID: 931822561}
   VertexRadius: 0.09
   VertexColor: {r: 1, g: 0, b: 0, a: 1}
-  SplineColor: {r: 0.088113785, g: 0, b: 1, a: 0}
-  Resolution: 13
+  SplineColor: {r: 0.088113785, g: 0, b: 1, a: 1}
+  Resolution: 9
   IsLoop: 0
