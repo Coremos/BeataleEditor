@@ -15,7 +15,6 @@ namespace Beatale.Route
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = SplineColor;
             DrawVertices();
             DrawSpline();
         }
@@ -33,6 +32,7 @@ namespace Beatale.Route
 
         public void DrawSpline()
         {
+            Gizmos.color = SplineColor;
             if (RouteVertices.Count > 1)
             {
                 for (int index = 0; index < RouteVertices.Count - 1; index++)
