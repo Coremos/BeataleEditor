@@ -8,7 +8,8 @@ public class RouteSplineEditor : Editor
 {
     private static readonly Color DIRECTION_COLOR = Color.yellow;
     private RouteSpline routeSpline;
-    private ReorderableList reorderableList;
+    private ReorderableList routeVerticesList;
+    private RouteVerticesListGenerator routeVerticesListGenerator;
 
     private SerializedProperty vertexRadiusProperty;
     private SerializedProperty vertexColorProperty;
@@ -16,6 +17,7 @@ public class RouteSplineEditor : Editor
     private SerializedProperty splineColorProperty;
     private SerializedProperty resolutionProperty;
     private SerializedProperty isLoopProperty;
+
 
     private void OnEnable()
     {
@@ -35,20 +37,19 @@ public class RouteSplineEditor : Editor
 
     private void InitializeReorderableList()
     {
-        reorderableList = new ReorderableList(serializedObject, routeVerticesProperty);
-        reorderableList.drawElementCallback = (rect, index, isActive, isFocused) =>
-        {
-            var element = routeVerticesProperty.GetArrayElementAtIndex(index);
-            EditorGUI.PropertyField(rect, element);
-        };
-
-        AddCallback(routeVerticesProperty);
+        routeVerticesListGenerator = new RouteVerticesListGenerator(serializedObject, routeVerticesProperty);
+        routeVerticesList = routeVerticesListGenerator.GenerateList();
     }
 
     private void OnSceneGUI()
     {
-        Tools.current = Tool.None;
+        //Tools.current = Tool.None;
         routeSpline = (RouteSpline)target;
+        DrawVertices();
+    }
+
+    private void DrawVertices()
+    {
         foreach (var vertex in routeSpline.RouteVertices)
         {
             DrawVertex(vertex);
@@ -60,7 +61,7 @@ public class RouteSplineEditor : Editor
         var handlePosition = DrawPositionHandle(vertex.transform);
         if (handlePosition != vertex.Position)
         {
-            Undo.RecordObject(vertex.transform, "MoveVertex");
+            Undo.RecordObject(vertex.transform, "Move RouteVertex");
             vertex.Position = handlePosition;
         }
 
@@ -88,21 +89,11 @@ public class RouteSplineEditor : Editor
         return Handles.Slider(position, position.normalized);
     }
 
-    private void AddCallback(SerializedProperty property)
-    {
-        reorderableList.onAddCallback += (list) => {
-            list.index = property.arraySize++;
-            var element = property.GetArrayElementAtIndex(list.index);
-            element.stringValue = "New String " + list.index;
-
-        };
-    }
-
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         DrawProperties();
-        reorderableList.DoLayoutList();
+        routeVerticesList.DoLayoutList();
         if (GUI.changed)
         {
             serializedObject.ApplyModifiedProperties();
