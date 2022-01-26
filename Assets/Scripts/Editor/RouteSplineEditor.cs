@@ -7,6 +7,7 @@ using UnityEngine;
 public class RouteSplineEditor : Editor
 {
     private static readonly Color DIRECTION_COLOR = Color.yellow;
+
     private RouteSpline routeSpline;
     private ReorderableList routeVerticesList;
     private RouteVerticesListGenerator routeVerticesListGenerator;
@@ -17,7 +18,6 @@ public class RouteSplineEditor : Editor
     private SerializedProperty splineColorProperty;
     private SerializedProperty resolutionProperty;
     private SerializedProperty isLoopProperty;
-
 
     private void OnEnable()
     {
@@ -65,7 +65,27 @@ public class RouteSplineEditor : Editor
             vertex.Position = handlePosition;
         }
 
-        //DrawCircleHandle(vertex.Direction1);
+        if (vertex.VertexType != VertexType.None)
+        {
+            handlePosition = DrawDirectionHandle(vertex.GlobalDirection1, Quaternion.FromToRotation(Vector3.up, vertex.Direction1));
+            if (handlePosition != vertex.GlobalDirection1)
+            {
+                Undo.RecordObject(vertex, "Move RouteVertex Direction");
+                vertex.GlobalDirection1 = handlePosition;
+                if (vertex.VertexType == VertexType.Connected) vertex.Direction2 = -vertex.Direction1;
+            }
+
+            handlePosition = DrawDirectionHandle(vertex.GlobalDirection2, Quaternion.FromToRotation(Vector3.up, vertex.Direction2));
+            if (handlePosition != vertex.GlobalDirection2)
+            {
+                Undo.RecordObject(vertex, "Move RouteVertex Direction");
+                vertex.GlobalDirection2 = handlePosition;
+                if (vertex.VertexType == VertexType.Connected) vertex.Direction1 = -vertex.Direction2;
+            }
+        }
+        Handles.color = DIRECTION_COLOR;
+        Handles.DrawLine(vertex.Position, vertex.GlobalDirection1);
+        Handles.DrawLine(vertex.Position, vertex.GlobalDirection2);
     }
 
     private Vector3 DrawPositionHandle(Transform transform)
@@ -84,9 +104,11 @@ public class RouteSplineEditor : Editor
         return position;
     }
 
-    private Vector3 DrawCircleHandle(Vector3 position)
+    private Vector3 DrawDirectionHandle(Vector3 position, Quaternion quaternion)
     {
-        return Handles.Slider(position, position.normalized);
+        Handles.color = DIRECTION_COLOR;
+        //return Handles.PositionHandle(position, position.normalized);
+        return Handles.FreeMoveHandle(position, quaternion, 1, Vector3.zero, Handles.ArrowHandleCap);
     }
 
     public override void OnInspectorGUI()

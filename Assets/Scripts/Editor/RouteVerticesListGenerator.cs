@@ -36,8 +36,8 @@ public class RouteVerticesListGenerator
 
     private void OnRemove(ReorderableList list)
     {
-        if (EditorUtility.DisplayDialog("Warning!",
-            "Are you sure you want to delete the wave?",
+        if (EditorUtility.DisplayDialog("Warning",
+            "Delete " + list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue.name + "?",
             "Yes",
             "No"))
         {
@@ -79,8 +79,6 @@ public class RouteVerticesListGenerator
 
     private void AddVertex()
     {
-        routeVerticesProperty.InsertArrayElementAtIndex(routeVerticesProperty.arraySize + 1);
-
         reorderableList.index = routeVerticesProperty.arraySize++;
         var element = routeVerticesProperty.GetArrayElementAtIndex(reorderableList.index);
         
@@ -93,7 +91,8 @@ public class RouteVerticesListGenerator
         routeVertex.Direction2 = -Vector3.right * 0.1f;
 
         //routeVerticesProperty.InsertArrayElementAtIndex(routeVerticesProperty.arraySize);
-        //routeVerticesProperty.GetArrayElementAtIndex(routeVerticesProperty.arraySize - 1).objectReferenceValue = routeVertex;
+        routeVerticesProperty.GetArrayElementAtIndex(routeVerticesProperty.arraySize - 1).objectReferenceValue = routeVertex;
+
         inspectorObject.ApplyModifiedProperties();
     }
-}
+} 
