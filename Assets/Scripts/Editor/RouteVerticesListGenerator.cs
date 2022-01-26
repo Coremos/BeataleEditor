@@ -31,22 +31,7 @@ public class RouteVerticesListGenerator
         reorderableList.onSelectCallback = OnSelect;
         reorderableList.onCanRemoveCallback = OnCanRemove;
         reorderableList.onRemoveCallback = OnRemove;
-        //reorderableList.onAddCallback = (ReorderableList list) =>
-        //{
-        //    list.index = list.serializedProperty.arraySize++;
-        //    var element = list.serializedProperty.GetArrayElementAtIndex(list.index);
-        //};
-
         reorderableList.onAddDropdownCallback = OnAddDropdown;
-        //reorderableList.onAddCallback = OnAdd;
-
-        //reorderableList.drawElementBackgroundCallback = (rect, index, isActive, isFocused) =>
-        //{
-        //    if (Event.current.type == EventType.Repaint)
-        //    {
-        //        EditorStyles.miniButton.Draw(rect, false, isActive, isFocused, false);
-        //    }
-        //};
     }
 
     private void OnRemove(ReorderableList list)
@@ -92,21 +77,10 @@ public class RouteVerticesListGenerator
         menu.DropDown(buttonRect);
     }
 
-    private void OnAdd(ReorderableList list)
-    {
-        list.index = list.serializedProperty.arraySize++;
-        var element = list.serializedProperty.GetArrayElementAtIndex(list.index);
-        //element.stringValue = "New String " + list.index;
-    }
-
     private void AddVertex()
     {
         routeVerticesProperty.InsertArrayElementAtIndex(routeVerticesProperty.arraySize + 1);
 
-        //routeVerticesProperty.arraySize++;
-        //reorderableList.serializedProperty.arraySize++;
-
-        //Debug.Log("OnClickAddVertexCallback");
         reorderableList.index = routeVerticesProperty.arraySize++;
         var element = routeVerticesProperty.GetArrayElementAtIndex(reorderableList.index);
         
@@ -118,8 +92,8 @@ public class RouteVerticesListGenerator
         routeVertex.Direction1 = Vector3.right * 0.1f;
         routeVertex.Direction2 = -Vector3.right * 0.1f;
 
-        inspectorObject.ApplyModifiedProperties();
         //routeVerticesProperty.InsertArrayElementAtIndex(routeVerticesProperty.arraySize);
         //routeVerticesProperty.GetArrayElementAtIndex(routeVerticesProperty.arraySize - 1).objectReferenceValue = routeVertex;
+        inspectorObject.ApplyModifiedProperties();
     }
 }
