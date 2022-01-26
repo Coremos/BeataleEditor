@@ -21,6 +21,7 @@ public class RouteSplineEditor : Editor
 
     private void OnEnable()
     {
+        routeSpline = (RouteSpline)target;
         InitializeProperties();
         InitializeReorderableList();
     }
@@ -37,14 +38,13 @@ public class RouteSplineEditor : Editor
 
     private void InitializeReorderableList()
     {
-        routeVerticesListGenerator = new RouteVerticesListGenerator(serializedObject, routeVerticesProperty);
+        routeVerticesListGenerator = new RouteVerticesListGenerator(serializedObject, routeVerticesProperty, routeSpline);
         routeVerticesList = routeVerticesListGenerator.GenerateList();
     }
 
     private void OnSceneGUI()
     {
         //Tools.current = Tool.None;
-        routeSpline = (RouteSpline)target;
         DrawVertices();
     }
 
@@ -97,13 +97,8 @@ public class RouteSplineEditor : Editor
         if (GUI.changed)
         {
             serializedObject.ApplyModifiedProperties();
-            EditorUtility.SetDirty(target);
+            //EditorUtility.SetDirty(target);
         }
-    }
-
-    private void AddVertex()
-    {
-        GameObject vertex = new GameObject("RouteVertex");
     }
 
     private void DrawProperties()
