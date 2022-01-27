@@ -12,10 +12,17 @@ namespace Beatale.Route
     public class RouteVertex : MonoBehaviour
     {
         public VertexType VertexType;
+
+        [SerializeField]
+        private Vector3 position;
         public Vector3 Position
         {
-            get { return transform.position; }
-            set { transform.position = value; }
+            get
+            {
+                if (position != transform.position) position = transform.position;
+                return position;
+            }
+            set { position = transform.position = value; }
         }
 
         [SerializeField]

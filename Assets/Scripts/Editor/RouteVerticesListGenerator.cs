@@ -26,24 +26,9 @@ public class RouteVerticesListGenerator
     public void InitializeReorderableList()
     {
         reorderableList = new ReorderableList(inspectorObject, routeVerticesProperty);
+        reorderableList.elementHeight = 80.0f;
         reorderableList.drawHeaderCallback = DrawHeader;
-        reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-        {
-            //var prop = new SerializedObject(routeSpline.RouteVertices[index]);
-            //prop.FindProperty("")
-            //var element = routeVerticesProperty.serializedProperty.GetArrayElementAtIndex(index);
-            var element = routeVerticesProperty.GetArrayElementAtIndex(index).objectReferenceValue;
-            var serializedElement = new SerializedObject(element);
-            var prop = serializedElement.FindProperty("VertexType");
-            //var vertex = element.FindPropertyRelative("RouteVertex");
-            //Debug.Log(element);
-            EditorGUI.PropertyField(
-                new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight), prop
-                , GUIContent.none);
-            routeSpline.RouteVertices[index].VertexType = (VertexType)prop.enumValueIndex;
-            inspectorObject.ApplyModifiedProperties();
-        };
-        //DrawElement;
+        reorderableList.drawElementCallback = DrawElement;
         reorderableList.onSelectCallback = OnSelect;
         reorderableList.onCanRemoveCallback = OnCanRemove;
         reorderableList.onRemoveCallback = OnRemove;
@@ -80,24 +65,32 @@ public class RouteVerticesListGenerator
 
     private void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
     {
-        //var element = routeVerticesProperty.GetArrayElementAtIndex(index);
-        //var positionProperty = element.FindPropertyRelative("Position");
-        ////Debug.Log(positionProperty.vector3Value);
-        //var direction1Property = element.FindPropertyRelative("direction1");
-        //var direction2Property = element.FindPropertyRelative("direction2");
-        //var typeProperty = element.FindPropertyRelative("VertexType");
+        var element = routeVerticesProperty.GetArrayElementAtIndex(index);
+        //var vertex = routeSpline.RouteVertices[index];
+        var vertex = (RouteVertex)element.objectReferenceValue;
+        var serializedObject = new SerializedObject(vertex);
+        var vertexTypeProperty = serializedObject.FindProperty("VertexType");
+        var gameObjectProperty = serializedObject.FindProperty("gameObject");
+        var positionProperty = serializedObject.FindProperty("position");
+        var direction1Property = serializedObject.FindProperty("direction1");
+        var direction2Property = serializedObject.FindProperty("direction2");
 
-        //var typeRect = new Rect(rect.x, rect.y, 60.0f, EditorGUIUtility.singleLineHeight);
+        var vertexTypeRect = new Rect(rect.x, rect.y, 100.0f, EditorGUIUtility.singleLineHeight);
+        var gameObjectRect = new Rect(rect.x + 100.0f, rect.y, rect.width - 100.0f, EditorGUIUtility.singleLineHeight);
+        var positionRect = new Rect(rect.x, rect.y + 20, rect.width, EditorGUIUtility.singleLineHeight);
+        var direction1Rect = new Rect(rect.x, rect.y + 40, rect.width, EditorGUIUtility.singleLineHeight);
+        var direction2Rect = new Rect(rect.x, rect.y + 60, rect.width, EditorGUIUtility.singleLineHeight);
 
+        EditorGUI.PropertyField(vertexTypeRect, vertexTypeProperty, GUIContent.none);
+        EditorGUI.PropertyField(gameObjectRect, element, GUIContent.none);
+        EditorGUI.PropertyField(positionRect, positionProperty, GUIContent.none);
+        EditorGUI.PropertyField(direction1Rect, direction1Property, GUIContent.none);
+        EditorGUI.PropertyField(direction2Rect, direction2Property, GUIContent.none);
 
-
-
-        //EditorGUI.PropertyField(typeRect, typeProperty);
-
-        var element = reorderableList.serializedProperty.FindPropertyRelative("VertexRadius");
-        //EditorGUILayout.PropertyField(direction1Property, new GUIContent("Direction1"));
-        EditorGUI.PropertyField(rect, element);
-
+        vertex.VertexType = (VertexType)vertexTypeProperty.enumValueIndex;
+        vertex.Position = positionProperty.vector3Value;
+        vertex.Direction1 = direction1Property.vector3Value;
+        vertex.Direction2 = direction2Property.vector3Value;
     }
 
     private void OnAddDropdown(Rect buttonRect, ReorderableList list)
