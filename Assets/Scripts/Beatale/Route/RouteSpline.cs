@@ -66,13 +66,13 @@ namespace Beatale.Route
         {
             if (vertex1.Direction2 == Vector3.zero)
             {
-                if (vertex2.Direction1 != Vector3.zero) return GetCubicCurvePoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
-                else return GetQuadraticCurvePoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.Position, t);
+                if (vertex2.Direction1 == Vector3.zero) return GetLinearPoint(vertex1.Position, vertex2.Position, t);
+                else return GetQuadraticCurvePoint(vertex1.Position, vertex2.GlobalDirection1, vertex2.Position, t);
             }
             else
             {
-                if (vertex2.Direction1 != Vector3.zero) return GetQuadraticCurvePoint(vertex1.Position, vertex2.GlobalDirection1, vertex2.Position, t);
-                else return GetLinearPoint(vertex1.Position, vertex2.Position, t);
+                if (vertex2.Direction1 == Vector3.zero) return GetQuadraticCurvePoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.Position, t);
+                else return GetCubicCurvePoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
             }
         }
 
