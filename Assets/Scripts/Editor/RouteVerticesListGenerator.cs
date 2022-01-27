@@ -27,7 +27,23 @@ public class RouteVerticesListGenerator
     {
         reorderableList = new ReorderableList(inspectorObject, routeVerticesProperty);
         reorderableList.drawHeaderCallback = DrawHeader;
-        reorderableList.drawElementCallback = DrawElement;
+        reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        {
+            //var prop = new SerializedObject(routeSpline.RouteVertices[index]);
+            //prop.FindProperty("")
+            //var element = routeVerticesProperty.serializedProperty.GetArrayElementAtIndex(index);
+            var element = routeVerticesProperty.GetArrayElementAtIndex(index).objectReferenceValue;
+            var serializedElement = new SerializedObject(element);
+            var prop = serializedElement.FindProperty("VertexType");
+            //var vertex = element.FindPropertyRelative("RouteVertex");
+            //Debug.Log(element);
+            EditorGUI.PropertyField(
+                new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight), prop
+                , GUIContent.none);
+            routeSpline.RouteVertices[index].VertexType = (VertexType)prop.enumValueIndex;
+            inspectorObject.ApplyModifiedProperties();
+        };
+        //DrawElement;
         reorderableList.onSelectCallback = OnSelect;
         reorderableList.onCanRemoveCallback = OnCanRemove;
         reorderableList.onRemoveCallback = OnRemove;
@@ -64,8 +80,24 @@ public class RouteVerticesListGenerator
 
     private void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
     {
-        var element = routeVerticesProperty.GetArrayElementAtIndex(index);
+        //var element = routeVerticesProperty.GetArrayElementAtIndex(index);
+        //var positionProperty = element.FindPropertyRelative("Position");
+        ////Debug.Log(positionProperty.vector3Value);
+        //var direction1Property = element.FindPropertyRelative("direction1");
+        //var direction2Property = element.FindPropertyRelative("direction2");
+        //var typeProperty = element.FindPropertyRelative("VertexType");
+
+        //var typeRect = new Rect(rect.x, rect.y, 60.0f, EditorGUIUtility.singleLineHeight);
+
+
+
+
+        //EditorGUI.PropertyField(typeRect, typeProperty);
+
+        var element = reorderableList.serializedProperty.FindPropertyRelative("VertexRadius");
+        //EditorGUILayout.PropertyField(direction1Property, new GUIContent("Direction1"));
         EditorGUI.PropertyField(rect, element);
+
     }
 
     private void OnAddDropdown(Rect buttonRect, ReorderableList list)

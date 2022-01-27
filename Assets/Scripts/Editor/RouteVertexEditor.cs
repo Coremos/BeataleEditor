@@ -4,9 +4,13 @@ using UnityEditor;
 [CustomEditor(typeof(RouteVertex))]
 public class RouteVertexEditor : Editor
 {
+    private void OnEnable()
+    {
+        var vertex = (RouteVertex)target;
+    }
+
     private void OnSceneGUI()
     {
-        Tools.current = Tool.None;
-        var vertex = (RouteVertex)target;
+        //Tools.current = Tool.None;
     }
 }

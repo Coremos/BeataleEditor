@@ -18,6 +18,7 @@ namespace Beatale.Route
             set { transform.position = value; }
         }
 
+        [SerializeField]
         private Vector3 direction1;
         public Vector3 Direction1
         {
@@ -30,6 +31,7 @@ namespace Beatale.Route
             }
         }
 
+        [SerializeField]
         private Vector3 direction2;
         public Vector3 Direction2
         {
