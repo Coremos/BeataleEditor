@@ -64,20 +64,17 @@ namespace Beatale.Route
         {
             if (vertex1.Direction2 == Vector3.zero)
             {
-                if (vertex2.Direction1 == Vector3.zero) return GetLinearPoint(vertex1.Position, vertex2.Position, t);
+                if (vertex2.Direction1 == Vector3.zero) return Line.GetPoint(vertex1.Position, vertex2.Position, t);
                 else return GetQuadraticCurvePoint(vertex1.Position, vertex2.GlobalDirection1, vertex2.Position, t);
             }
             else
             {
                 if (vertex2.Direction1 == Vector3.zero) return GetQuadraticCurvePoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.Position, t);
-                else return GetCubicCurvePoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
+                else return CubicBezierCurve.GetPoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
             }
         }
 
-        public Vector3 GetLinearPoint(Vector3 vertex1, Vector3 vertex2, float t)
-        {
-            return vertex1 + ((vertex2 - vertex1) * t);
-        }
+        
 
         public Vector3 GetCubicCurvePoint(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float t)
         {
@@ -100,6 +97,57 @@ namespace Beatale.Route
             Vector3 part3 = Mathf.Pow(t, 2) * p3;
 
             return part1 + part2 + part3;
+        }
+
+        
+    }
+
+    public class CubicBezierCurve
+    {
+
+        public float GetLength()
+        {
+            return 0;
+        }
+
+        public float DistanceToTValue()
+        {
+            return 0;
+        }
+
+        public static Vector3 GetPoint(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float t)
+        {
+            t = Mathf.Clamp01(t);
+
+            Vector3 part1 = Mathf.Pow(1 - t, 3) * p1;
+            Vector3 part2 = 3 * Mathf.Pow(1 - t, 2) * t * p2;
+            Vector3 part3 = 3 * (1 - t) * Mathf.Pow(t, 2) * p3;
+            Vector3 part4 = Mathf.Pow(t, 3) * p4;
+
+            return part1 + part2 + part3 + part4;
+        }
+
+        public static float GetApproximateLength(RouteVertex vertex1, RouteVertex vertex2, int resolution)
+        {
+            float resolutionStep = 1.0f / resolution;
+            var currentPoint = vertex1.Position;
+            var nextPoint = Vector3.zero;
+            Vector3 distance = Vector3.zero;
+            for (int index = 1; index <= resolution; index++)
+            {
+                nextPoint = GetPoint(vertex1.Position, vertex1.Direction2, vertex2.Direction1, vertex2.Position, resolutionStep * index);
+                distance += nextPoint - currentPoint;
+                currentPoint = nextPoint;
+            }
+            return 0;
+        }
+    }
+
+    public class Line
+    {
+        public static Vector3 GetPoint(Vector3 vertex1, Vector3 vertex2, float t)
+        {
+            return vertex1 + ((vertex2 - vertex1) * t);
         }
     }
 }
