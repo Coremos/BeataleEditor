@@ -98,13 +98,11 @@ namespace Beatale.Route
 
             return part1 + part2 + part3;
         }
-
-        
     }
 
     public class CubicBezierCurve
     {
-
+        
         public float GetLength()
         {
             return 0;
@@ -115,31 +113,30 @@ namespace Beatale.Route
             return 0;
         }
 
-        public static Vector3 GetPoint(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float t)
+        public static Vector3 GetPoint(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 poisition2, float t)
         {
-            t = Mathf.Clamp01(t);
+            float subT = 1.0f - t;
+            float subT2 = subT * subT;
+            Vector3 part1 = Mathf.Pow(1 - t, 3) * position1;
+            Vector3 part2 = 3 * Mathf.Pow(1 - t, 2) * t * direction1;
+            Vector3 part3 = 3 * (1 - t) * Mathf.Pow(t, 2) * direction2;
+            Vector3 part4 = Mathf.Pow(t, 3) * poisition2;
 
-            Vector3 part1 = Mathf.Pow(1 - t, 3) * p1;
-            Vector3 part2 = 3 * Mathf.Pow(1 - t, 2) * t * p2;
-            Vector3 part3 = 3 * (1 - t) * Mathf.Pow(t, 2) * p3;
-            Vector3 part4 = Mathf.Pow(t, 3) * p4;
-
-            return part1 + part2 + part3 + part4;
+            return subT * subT * subT * position1;
         }
 
         public static float GetApproximateLength(RouteVertex vertex1, RouteVertex vertex2, int resolution)
         {
             float resolutionStep = 1.0f / resolution;
             var currentPoint = vertex1.Position;
-            var nextPoint = Vector3.zero;
             Vector3 distance = Vector3.zero;
             for (int index = 1; index <= resolution; index++)
             {
-                nextPoint = GetPoint(vertex1.Position, vertex1.Direction2, vertex2.Direction1, vertex2.Position, resolutionStep * index);
+                var nextPoint = GetPoint(vertex1.Position, vertex1.Direction2, vertex2.Direction1, vertex2.Position, resolutionStep * index);
                 distance += nextPoint - currentPoint;
                 currentPoint = nextPoint;
             }
-            return 0;
+            return distance.magnitude;
         }
     }
 
