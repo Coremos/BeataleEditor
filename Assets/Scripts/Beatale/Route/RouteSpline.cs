@@ -73,20 +73,48 @@ namespace Beatale.Route
             }
         }
 
-        
+
     }
 
     public class CubicCurve
     {
-        
         public float GetLength()
         {
             return 0;
         }
 
-        public float DistanceToTValue()
+        public float[] GenerateLUT(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, int resolution)
         {
-            return 0;
+            float resolutionStep = 1.0f / (resolution - 1);
+            float[] lut = new float[resolution];
+            lut[0] = 0;
+            Vector3 currentPoint = position1;
+
+            for (int index = 1; index < resolution; index++)
+            {
+                var nextPoint = GetPoint(position1, direction2, direction1, position2, resolutionStep * index);
+                lut[index] += lut[index - 1] + Vector3.Magnitude(nextPoint - currentPoint);
+                currentPoint = nextPoint;
+            }
+            return lut;
+        }
+
+        public float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, out bool isBetween)
+        {
+            isBetween = false;
+            int resolution = 30;
+            float[] lut = GenerateLUT(vertex1.Position, vertex1.Direction2, vertex2.Direction2, vertex2.Position, resolution);
+
+            if (distance > lut[resolution - 1]) return distance - lut[resolution - 1];
+
+            isBetween = true;
+            for (int index = 0; index < resolution - 1; index++)
+            {
+                if (distance > lut[index] && distance < lut[index + 1])
+                {
+                    return (index + (distance - lut[index]) / (lut[index + 1] - lut[index])) / (resolution - 1);
+                }
+            }
         }
 
         public static Vector3 GetVelocity(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, float t)
