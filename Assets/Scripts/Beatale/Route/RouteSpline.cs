@@ -12,6 +12,7 @@ namespace Beatale.Route
         public Color SplineColor;
         public int Resolution;
         public bool IsLoop;
+        public List<RouteSample> RouteSamples;
 
         private void OnDrawGizmos()
         {
@@ -72,8 +73,6 @@ namespace Beatale.Route
                 else return CubicCurve.GetPoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
             }
         }
-
-
     }
 
     public class CubicCurve
@@ -81,6 +80,12 @@ namespace Beatale.Route
         public float GetLength()
         {
             return 0;
+        }
+
+        public List<RouteSample> GetRouteSamples()
+        {
+            var routeSamples = new List<RouteSample>();
+            return routeSamples;
         }
 
         public float[] GenerateLUT(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, int resolution)
@@ -115,6 +120,7 @@ namespace Beatale.Route
                     return (index + (distance - lut[index]) / (lut[index + 1] - lut[index])) / (resolution - 1);
                 }
             }
+            return 0;
         }
 
         public static Vector3 GetVelocity(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, float t)
