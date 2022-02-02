@@ -18,6 +18,17 @@ namespace Beatale.Route
         {
             DrawVertices();
             DrawSpline();
+            DrawSamples();
+        }
+
+        public void DrawSamples()
+        {
+            var routeSamples = GetRouteSamples(0.5f);
+            for (int index = 0; index < routeSamples.Count; index++)
+            {
+                Gizmos.color = Color.black;
+                Gizmos.DrawSphere(routeSamples[index].Position, VertexRadius * 0.5f); 
+            }
         }
 
         public void DrawVertices()
@@ -73,54 +84,93 @@ namespace Beatale.Route
                 else return CubicCurve.GetPoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
             }
         }
+
+        public List<RouteSample> GetRouteSamples(int resolution)
+        {
+            var routeSamples = new List<RouteSample>();
+            for (int index = 0; index < RouteVertices.Count - 1; index++)
+            {
+            }
+            return routeSamples;
+        }
+
+        public List<RouteSample> GetRouteSamples(float distance)
+        {
+            var routeSamples = new List<RouteSample>();
+            var leftDistance = 0.0f;
+            for (int index = 0; index < RouteVertices.Count - 1; index++)
+            {
+                var lut = CubicCurve.GenerateLUT(RouteVertices[index], RouteVertices[index + 1]);
+
+                if (lut[lut.Length - 1] < leftDistance)
+                {
+                    leftDistance -= lut[lut.Length - 1];
+                    continue;
+                }
+
+                float currentDistance = leftDistance;
+                while (currentDistance < lut[lut.Length - 1])
+                {
+                    var t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut, out bool isBetween);
+                    routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], t));
+                    currentDistance += distance;
+                }
+
+                leftDistance = currentDistance - lut[lut.Length - 1];
+            }
+            return routeSamples;
+        }
     }
 
     public class CubicCurve
     {
-        public float GetLength()
+        private const int DEFAULT_RESOLUTION = 60;
+
+        public static RouteSample GetRouteSample(RouteVertex vertex1, RouteVertex vertex2, float t)
         {
-            return 0;
+            return new RouteSample()
+            {
+                Position = GetPoint(vertex1, vertex2, t),
+                Direction = GetVelocity(vertex1, vertex2, t)
+            };
         }
 
-        public List<RouteSample> GetRouteSamples()
-        {
-            var routeSamples = new List<RouteSample>();
-            return routeSamples;
-        }
-
-        public float[] GenerateLUT(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, int resolution)
+        public static float[] GenerateLUT(RouteVertex vertex1, RouteVertex vertex2, int resolution = DEFAULT_RESOLUTION)
         {
             float resolutionStep = 1.0f / (resolution - 1);
             float[] lut = new float[resolution];
             lut[0] = 0;
-            Vector3 currentPoint = position1;
+            Vector3 currentPoint = vertex1.Position;
 
             for (int index = 1; index < resolution; index++)
             {
-                var nextPoint = GetPoint(position1, direction2, direction1, position2, resolutionStep * index);
+                var nextPoint = GetPoint(vertex1, vertex2, resolutionStep * index);
                 lut[index] += lut[index - 1] + Vector3.Magnitude(nextPoint - currentPoint);
                 currentPoint = nextPoint;
             }
             return lut;
         }
 
-        public float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, out bool isBetween)
+        public static float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, ref float[] lut, out bool isBetween, int resolution = DEFAULT_RESOLUTION)
         {
             isBetween = false;
-            int resolution = 30;
-            float[] lut = GenerateLUT(vertex1.Position, vertex1.Direction2, vertex2.Direction2, vertex2.Position, resolution);
 
-            if (distance > lut[resolution - 1]) return distance - lut[resolution - 1];
+            if (distance > lut[lut.Length - 1]) return distance - lut[lut.Length - 1];
 
             isBetween = true;
             for (int index = 0; index < resolution - 1; index++)
             {
                 if (distance > lut[index] && distance < lut[index + 1])
                 {
-                    return (index + (distance - lut[index]) / (lut[index + 1] - lut[index])) / (resolution - 1);
+                    return (index + (distance - lut[index]) / (lut[index + 1] - lut[index])) / (lut.Length - 1);
                 }
             }
             return 0;
+        }
+
+        public static Vector3 GetVelocity(RouteVertex vertex1, RouteVertex vertex2, float t)
+        {
+            return GetVelocity(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
         }
 
         public static Vector3 GetVelocity(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, float t)
@@ -131,6 +181,11 @@ namespace Beatale.Route
                 (3 * subT * subT - 2 * subT) * direction1 +
                 (-3 * t * t + 2 * t) * direction2 +
                 t * t * position2;
+        }
+
+        public static Vector3 GetPoint(RouteVertex vertex1, RouteVertex vertex2, float t)
+        {
+            return GetPoint(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
         }
 
         public static Vector3 GetPoint(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, float t)
