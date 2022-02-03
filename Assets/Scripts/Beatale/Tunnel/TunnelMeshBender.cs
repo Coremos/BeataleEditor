@@ -20,8 +20,6 @@ namespace Beatale.TunnelSystem
             routeSamples = RouteSpline.GetRouteSamples(Distance);
             isMove = false;
             currentIndex = 0;
-            Debug.Log(routeSamples.Count);
-
             Tunnel.transform.position = routeSamples[0].Position;
         }
 
@@ -39,7 +37,6 @@ namespace Beatale.TunnelSystem
                 if (Vector3.Distance(Tunnel.transform.position, routeSamples[currentIndex].Position) == 0f)
                 {
                     currentIndex++;
-                    Debug.Log(currentIndex);
                 }
             }
             else currentIndex = 0;
