@@ -36,8 +36,8 @@ namespace Beatale.TunnelSystem
             if (currentIndex < routeSamples.Count)
             {
                 Tunnel.transform.position = Vector3.MoveTowards(Tunnel.transform.position, routeSamples[currentIndex].Position, Speed * Time.deltaTime);
-                //Tunnel.transform.rotation = Quaternion.LookRotation(routeSamples[currentIndex].Direction);
-                Tunnel.transform.rotation = Quaternion.Euler(Quaternion.AngleAxis(90.0f, routeSamples[currentIndex].Direction) * routeSamples[currentIndex].Direction);
+                Tunnel.transform.rotation = Quaternion.LookRotation(routeSamples[currentIndex].Direction);
+                //Tunnel.transform.rotation = Quaternion.Euler(Quaternion.AngleAxis(90.0f, routeSamples[currentIndex].Direction) * routeSamples[currentIndex].Direction);
                 if (Vector3.Distance(Tunnel.transform.position, routeSamples[currentIndex].Position) == 0f)
                 {
                     currentIndex++;
