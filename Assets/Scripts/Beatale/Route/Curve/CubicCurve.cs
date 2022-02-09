@@ -62,7 +62,7 @@ namespace Beatale.Route.Curve
 
         public static Vector3 GetVelocity(RouteVertex vertex1, RouteVertex vertex2, float t)
         {
-            return GetVelocity(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t);
+            return GetVelocity(vertex1.Position, vertex1.GlobalDirection2, vertex2.GlobalDirection1, vertex2.Position, t).normalized;
         }
 
         public static Vector3 GetVelocity(Vector3 position1, Vector3 direction1, Vector3 direction2, Vector3 position2, float t)
@@ -92,7 +92,7 @@ namespace Beatale.Route.Curve
 
         public static Vector3 GetUp(Vector3 direction, Vector3 up)
         {
-            return Vector3.Cross(direction, Vector3.Cross(direction, up));
+            return Vector3.Cross(direction, Vector3.Cross(up, direction));
         }
 
         public static float GetApproximateLength(RouteVertex vertex1, RouteVertex vertex2, int resolution)
