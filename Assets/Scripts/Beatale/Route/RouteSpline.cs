@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Beatale.Route.Curve;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -27,7 +28,12 @@ namespace Beatale.Route
             for (int index = 0; index < routeSamples.Count; index++)
             {
                 Gizmos.color = Color.black;
-                Gizmos.DrawSphere(routeSamples[index].Position, VertexRadius * 0.5f); 
+                Gizmos.DrawSphere(routeSamples[index].Position, VertexRadius * 0.5f);
+
+
+                Handles.color = Color.blue;
+                Handles.DrawLine(routeSamples[index].Position, routeSamples[index].Position + routeSamples[index].Up);
+
             }
         }
 
@@ -97,12 +103,11 @@ namespace Beatale.Route
         public List<RouteSample> GetRouteSamples(float distance)
         {
             var routeSamples = new List<RouteSample>();
-            var upVector = Vector3.zero;
+            var upVector = Vector3.up;
             var leftDistance = 0.0f;
             for (int index = 0; index < RouteVertices.Count - 1; index++)
             {
                 var lut = CubicCurve.GenerateLUT(RouteVertices[index], RouteVertices[index + 1]);
-
                 if (lut[lut.Length - 1] < leftDistance)
                 {
                     leftDistance -= lut[lut.Length - 1];
@@ -113,7 +118,7 @@ namespace Beatale.Route
                 while (currentDistance < lut[lut.Length - 1])
                 {
                     var t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut, out bool isBetween);
-                    routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], t));
+                    routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, t));
                     currentDistance += distance;
                 }
 

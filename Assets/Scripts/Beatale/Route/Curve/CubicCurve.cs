@@ -15,6 +15,18 @@ namespace Beatale.Route.Curve
             };
         }
 
+        public static RouteSample GetRouteSample(RouteVertex vertex1, RouteVertex vertex2, ref Vector3 upVector,float t)
+        {
+            var direction = GetVelocity(vertex1, vertex2, t);
+            upVector = GetUp(direction, upVector).normalized;
+            return new RouteSample()
+            {
+                Position = GetPoint(vertex1, vertex2, t),
+                Direction = direction,
+                Up = upVector
+            };
+        }
+
         public static float[] GenerateLUT(RouteVertex vertex1, RouteVertex vertex2, int resolution = DEFAULT_RESOLUTION)
         {
             float resolutionStep = 1.0f / (resolution - 1);
@@ -76,6 +88,11 @@ namespace Beatale.Route.Curve
                 3 * subT * subT * t * direction1 +
                 3 * subT * t * t * direction2 +
                 t * t * t * position2;
+        }
+
+        public static Vector3 GetUp(Vector3 direction, Vector3 up)
+        {
+            return Vector3.Cross(direction, Vector3.Cross(direction, up));
         }
 
         public static float GetApproximateLength(RouteVertex vertex1, RouteVertex vertex2, int resolution)

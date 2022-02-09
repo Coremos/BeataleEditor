@@ -62,5 +62,10 @@ namespace Beatale.Route
             get { return transform.TransformPoint(direction2); }
             set { direction2 = transform.InverseTransformPoint(value); }
         }
+
+        public Vector3 Up;
+
+        private float roll;
+        public float Roll;
     }
 }
