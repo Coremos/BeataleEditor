@@ -83,9 +83,17 @@ public class RouteSplineEditor : Editor
                 if (vertex.VertexType == VertexType.Connected) vertex.Direction1 = -vertex.Direction2;
             }
         }
+        DrawUpHandle(vertex);
+
         Handles.color = DIRECTION_COLOR;
         Handles.DrawLine(vertex.Position, vertex.GlobalDirection1);
         Handles.DrawLine(vertex.Position, vertex.GlobalDirection2);
+    }
+
+    private Vector3 DrawUpHandle(RouteVertex vertex)
+    {
+        Handles.color = Color.blue;
+        return Handles.FreeMoveHandle(vertex.Position + vertex.Up * 5f, Quaternion.FromToRotation(Vector3.up, vertex.Up), .1f, Vector3.zero, Handles.CircleHandleCap);
     }
 
     private Vector3 DrawPositionHandle(Transform transform)
@@ -108,7 +116,7 @@ public class RouteSplineEditor : Editor
     {
         Handles.color = DIRECTION_COLOR;
         //return Handles.PositionHandle(position, position.normalized);
-        return Handles.FreeMoveHandle(position, quaternion, 1, Vector3.zero, Handles.ArrowHandleCap);
+        return Handles.FreeMoveHandle(position, quaternion, 1, Vector3.zero, Handles.CircleHandleCap);
     }
 
     public override void OnInspectorGUI()
