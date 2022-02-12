@@ -115,13 +115,14 @@ namespace Beatale.Route
                 }
 
                 float currentDistance = leftDistance;
+                var lastUpVector = upVector;
                 while (currentDistance < lut[lut.Length - 1])
                 {
                     var t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut, out bool isBetween);
                     routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, t));
                     currentDistance += distance;
                 }
-
+                var angleDifference = Vector3.SignedAngle(lastUpVector, upVector, RouteVertices[index].Direction1);
                 leftDistance = currentDistance - lut[lut.Length - 1];
             }
             return routeSamples;
