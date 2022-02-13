@@ -103,11 +103,12 @@ namespace Beatale.Route
         public List<RouteSample> GetRouteSamples(float distance)
         {
             var routeSamples = new List<RouteSample>();
-            var upVector = Vector3.up;
-            var leftDistance = 0.0f;
+            float leftDistance = 0.0f;
+            Vector3 upVector = Quaternion.AngleAxis(RouteVertices[0].Roll, RouteVertices[0].Direction2) * Vector3.up;
+
             for (int index = 0; index < RouteVertices.Count - 1; index++)
             {
-                var lut = CubicCurve.GenerateLUT(RouteVertices[index], RouteVertices[index + 1]);
+                float[] lut = CubicCurve.GenerateLUT(RouteVertices[index], RouteVertices[index + 1]);
                 if (lut[lut.Length - 1] < leftDistance)
                 {
                     leftDistance -= lut[lut.Length - 1];
@@ -115,15 +116,24 @@ namespace Beatale.Route
                 }
 
                 float currentDistance = leftDistance;
-                var lastUpVector = upVector;
                 while (currentDistance < lut[lut.Length - 1])
                 {
-                    var t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut, out bool isBetween);
+                    Vector3 lastUpVector = upVector;
+                    float t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut, out bool isBetween);
+                    
+                    float rollDifference = RouteVertices[index + 1].Roll - RouteVertices[index].Roll;
+                    float roll = rollDifference * currentDistance / lut[lut.Length - 1];
+
                     routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, t));
+                    
+                    float angleDifference = Vector3.SignedAngle(lastUpVector, upVector, RouteVertices[index].Direction2);
+                    upVector = Quaternion.AngleAxis(roll - angleDifference, RouteVertices[index].Direction2) * upVector;
+                    
                     currentDistance += distance;
                 }
-                var angleDifference = Vector3.SignedAngle(lastUpVector, upVector, RouteVertices[index].Direction1);
                 leftDistance = currentDistance - lut[lut.Length - 1];
+
+                routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, 1));
             }
             return routeSamples;
         }
