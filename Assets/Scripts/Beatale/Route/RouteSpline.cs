@@ -30,10 +30,8 @@ namespace Beatale.Route
                 Gizmos.color = Color.black;
                 Gizmos.DrawSphere(routeSamples[index].Position, VertexRadius * 0.5f);
 
-
                 Handles.color = Color.blue;
                 Handles.DrawLine(routeSamples[index].Position, routeSamples[index].Position + routeSamples[index].Up);
-
             }
         }
 
