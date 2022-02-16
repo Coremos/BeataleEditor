@@ -29,9 +29,6 @@ namespace Beatale.TunnelSystem
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.A)) isMove = true;
-            if (Input.GetKey(KeyCode.RightArrow)) Roll += 5f;
-            if (Input.GetKey(KeyCode.LeftArrow)) Roll -= 5f;
-            if (Input.GetKey(KeyCode.UpArrow)) Debug.Log(Quaternion.FromToRotation(Vector3.zero, TestVector3.normalized - Vector3.forward) * Vector3.up);
 
             if (!isMove) return;
 
