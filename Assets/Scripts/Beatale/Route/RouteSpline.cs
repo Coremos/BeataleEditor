@@ -114,18 +114,20 @@ namespace Beatale.Route
                 }
 
                 float currentDistance = leftDistance;
+                float rollDifference = RouteVertices[index + 1].Roll - RouteVertices[index].Roll;
                 while (currentDistance < lut[lut.Length - 1])
                 {
                     Vector3 lastUpVector = upVector;
-                    float t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut, out bool isBetween);
+                    float t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut);
                     
-                    float rollDifference = RouteVertices[index + 1].Roll - RouteVertices[index].Roll;
                     float roll = rollDifference * currentDistance / lut[lut.Length - 1];
 
-                    routeSamples.Add(CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, t));
+                    var routeSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, t);
                     
                     float angleDifference = Vector3.SignedAngle(lastUpVector, upVector, RouteVertices[index].Direction2);
-                    upVector = Quaternion.AngleAxis(roll - angleDifference, RouteVertices[index].Direction2) * upVector;
+                    //routeSample.Up = Quaternion.AngleAxis(roll - angleDifference, RouteVertices[index].Direction2) * upVector;
+
+                    routeSamples.Add(routeSample);
                     
                     currentDistance += distance;
                 }

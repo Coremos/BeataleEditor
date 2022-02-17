@@ -43,13 +43,8 @@ namespace Beatale.Route.Curve
             return lut;
         }
 
-        public static float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, ref float[] lut, out bool isBetween, int resolution = DEFAULT_RESOLUTION)
+        public static float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, ref float[] lut, int resolution = DEFAULT_RESOLUTION)
         {
-            isBetween = false;
-
-            if (distance > lut[lut.Length - 1]) return distance - lut[lut.Length - 1];
-
-            isBetween = true;
             for (int index = 0; index < resolution - 1; index++)
             {
                 if (distance > lut[index] && distance < lut[index + 1])
