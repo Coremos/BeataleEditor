@@ -203,10 +203,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VertexType: 0
   position: {x: 10.222, y: 3.770102, z: 19.990772}
-  direction1: {x: -1.3542175, y: 10.531181, z: -3.6891184}
-  direction2: {x: 1.3542175, y: -10.531181, z: 3.6891184}
+  direction1: {x: -0.2268362, y: 10.486792, z: -3.9074268}
+  direction2: {x: 0.2268362, y: -10.486792, z: 3.9074268}
   Up: {x: 0, y: 0, z: 0}
-  Roll: 0
+  Roll: 10
 --- !u!4 &115490325
 Transform:
   m_ObjectHideFlags: 0
@@ -553,8 +553,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VertexType: 0
   position: {x: 12.041994, y: 0, z: 50.859856}
-  direction1: {x: -1.3970108, y: 5.557854, z: -2.0458527}
-  direction2: {x: 1.3970108, y: -5.557854, z: 2.0458527}
+  direction1: {x: -6.2847047, y: -1.6618643, z: -2.1861038}
+  direction2: {x: 6.2847047, y: 1.6618643, z: 2.1861038}
   Up: {x: 0, y: 0, z: 0}
   Roll: 0
 --- !u!4 &539947371
@@ -1077,7 +1077,7 @@ MonoBehaviour:
   direction1: {x: -4.243755, y: -40.25016, z: -6.895929}
   direction2: {x: 4.243755, y: 40.25016, z: 6.895929}
   Up: {x: 0, y: 0, z: 0}
-  Roll: 0
+  Roll: 10
 --- !u!4 &1607321235
 Transform:
   m_ObjectHideFlags: 0
@@ -1183,7 +1183,7 @@ MonoBehaviour:
   direction1: {x: -0, y: -32.537476, z: -32.92872}
   direction2: {x: 0, y: 32.537476, z: 32.92872}
   Up: {x: 0, y: 0, z: 0}
-  Roll: 0
+  Roll: 90.2
 --- !u!4 &1625005702
 Transform:
   m_ObjectHideFlags: 0
@@ -1481,7 +1481,7 @@ MonoBehaviour:
   direction1: {x: 19.956139, y: -7.324975, z: -10.725615}
   direction2: {x: -19.956139, y: 7.324975, z: 10.725615}
   Up: {x: 0, y: 0, z: 0}
-  Roll: 0
+  Roll: 0.91
 --- !u!4 &1933319766
 Transform:
   m_ObjectHideFlags: 0
