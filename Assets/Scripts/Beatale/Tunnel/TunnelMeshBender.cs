@@ -26,6 +26,15 @@ namespace Beatale.TunnelSystem
             Tunnel.transform.position = routeSamples[0].Position;
         }
 
+        void Bend(Mesh mesh)
+        {
+            Mesh bentVertice = mesh.
+            for (int index = 0; index < mesh.vertexCount; index++)
+            {
+                float distance = mesh.vertices[index].z;
+            }
+        }
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.A)) isMove = true;
