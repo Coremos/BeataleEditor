@@ -25,7 +25,7 @@ namespace Beatale
             private Mesh tunnelMesh;
             private MeshFilter meshFilter;
 
-            public void GenerateTunnelMesh()
+            public Mesh GenerateTunnelMesh()
             {
                 tunnelMesh = new Mesh();
                 tunnelMesh.name = "TunnelMesh";
@@ -52,18 +52,18 @@ namespace Beatale
                     {
                         float angle = angleStep * column;
 
-                        vertices.Add(new Vector3(row * heightStep, Radius * Mathf.Cos(angle), Radius * Mathf.Sin(angle)));
-                        uvs.Add(new Vector2(column * uvWidthStep, row * uvHeightStep));
+                        vertices.Add(new Vector3(Radius * Mathf.Sin(angle), Radius * Mathf.Cos(angle), row * heightStep));
+                        uvs.Add(new Vector2(1 - column * uvWidthStep, row * uvHeightStep));
 
                         if (row == 0 || column >= RadialSegments) continue;
 
                         triangles.Add(row * columnVertexAmount + column);
-                        triangles.Add(row * columnVertexAmount + column + 1);
                         triangles.Add((row - 1) * columnVertexAmount + column);
+                        triangles.Add(row * columnVertexAmount + column + 1);
 
                         triangles.Add((row - 1) * columnVertexAmount + column);
-                        triangles.Add(row * columnVertexAmount + column + 1);
                         triangles.Add((row - 1) * columnVertexAmount + column + 1);
+                        triangles.Add(row * columnVertexAmount + column + 1);
                     }
                 }
 
@@ -74,6 +74,8 @@ namespace Beatale
                 tunnelMesh.RecalculateNormals();
                 tunnelMesh.RecalculateBounds();
                 tunnelMesh.RecalculateTangents();
+
+                return tunnelMesh;
             }
         }
     }
