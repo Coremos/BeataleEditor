@@ -295,9 +295,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BPM: 0
-  Time: 0
+  PlayTime: 0
   MusicManager: {fileID: 0}
-  TunnelMeshGenerator: {fileID: 809987313}
   TunnelMeshBender: {fileID: 1165043471}
 --- !u!4 &403660004
 Transform:
@@ -750,12 +749,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc1e4a0d37562746ad873e6b9cb36f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TunnelMeshGenerator: {fileID: 809987313}
   SamplingDistance: 0.5
   RouteSpline: {fileID: 2125825091}
   Tunnel: {fileID: 1585326393}
   Speed: 10
   TestVector3: {x: 0, y: 0, z: 0}
-  TunnelMesh: {fileID: 0}
   CameraTransform: {fileID: 1861003609}
   Roll: 0
   Distance: 0
