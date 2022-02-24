@@ -15,15 +15,16 @@ namespace Beatale.Route.Curve
             };
         }
 
-        public static RouteSample GetRouteSample(RouteVertex vertex1, RouteVertex vertex2, ref Vector3 upVector,float t)
+        public static RouteSample GetRouteSample(RouteVertex vertex1, RouteVertex vertex2, Vector3 upVector, float t)
         {
             var direction = GetVelocity(vertex1, vertex2, t);
-            upVector = GetUp(direction, upVector).normalized;
+            upVector = GetUp(direction, upVector);
             return new RouteSample()
             {
                 Position = GetPoint(vertex1, vertex2, t),
                 Direction = direction,
-                Up = upVector
+                Up = upVector,
+                Rotation = Quaternion.LookRotation(direction, upVector)
             };
         }
 
@@ -43,9 +44,9 @@ namespace Beatale.Route.Curve
             return lut;
         }
 
-        public static float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, ref float[] lut, int resolution = DEFAULT_RESOLUTION)
+        public static float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, float[] lut)
         {
-            for (int index = 0; index < resolution - 1; index++)
+            for (int index = 0; index < lut.Length - 1; index++)
             {
                 if (distance > lut[index] && distance < lut[index + 1])
                 {
