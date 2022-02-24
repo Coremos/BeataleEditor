@@ -62,11 +62,4 @@ namespace Beatale
             public float BPM;
         }
     }
-
-    namespace Note
-    {
-        
-    }
-
-    
 }
