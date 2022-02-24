@@ -1,6 +1,6 @@
 ﻿using Beatale.Route.Curve;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,27 +14,36 @@ namespace Beatale.Route
         public Color SplineColor;
         public int Resolution;
         public bool IsLoop;
-        
-        private Dictionary<float, RouteSample> routeSamples;
+
         private static readonly float DEFAULT_SAMPLING_DISTANCE = 0.5f;
+        private List<CurveSample> curveSamples;
+        private float routeLength;
 
         private void OnDrawGizmos()
         {
             DrawVertices();
             DrawSpline();
-            DrawSamples();
+            DrawCurveSamples();
         }
 
-        public void DrawSamples()
+        private void DrawCurveSample(CurveSample sample)
         {
-            var routeSamples = GetRouteSamples(DEFAULT_SAMPLING_DISTANCE);
-            for (int index = 0; index < routeSamples.Count; index++)
+            for (int index = 0; index < sample.Samples.Count; index++)
             {
                 Gizmos.color = Color.black;
-                Gizmos.DrawSphere(routeSamples[index].Position, VertexRadius * 0.5f);
+                Gizmos.DrawSphere(sample.Samples[index].Position, VertexRadius * 0.5f);
+                
+                Gizmos.color = Color.white;
+                Gizmos.DrawLine(sample.Samples[index].Position, sample.Samples[index].Position + sample.Samples[index].Up);
+            }
+        }
 
-                Handles.color = Color.blue;
-                Handles.DrawLine(routeSamples[index].Position, routeSamples[index].Position + routeSamples[index].Up);
+        private void DrawCurveSamples()
+        {
+            GetRouteSamples(DEFAULT_SAMPLING_DISTANCE);
+            for (int index = 0; index < curveSamples.Count; index++)
+            {
+                DrawCurveSample(curveSamples[index]);
             }
         }
 
@@ -94,27 +103,24 @@ namespace Beatale.Route
 
         public RouteSample GetRouteSample(float distance)
         {
-            if (routeSamples.Equals(null))
+            if (curveSamples == null)
             {
                 GetRouteSamples(DEFAULT_SAMPLING_DISTANCE);
             }
 
-            if (routeSamples.TryGetValue(distance, out RouteSample routeSample))
+            for (int index = 0; index < curveSamples.Count; index++)
             {
-                return routeSample;
-            }
-
-            var distanceList = routeSamples.Keys.ToList();
-            for (int index = 1; index < distanceList.Count; index++)
-            {
-                if (distance < distanceList[index])
+                if (distance < curveSamples[index].Length)
                 {
-                    float t = distance - distanceList[index - 1] / distanceList[index] - distanceList[index - 1];
-                    return routeSamples[distance] = RouteSample.Lerp(routeSamples[index - 1], routeSamples[index], t);
+                    return curveSamples[index].GetRouteSample(distance);
+                }
+                else
+                {
+                    distance -= curveSamples[index].Length;
                 }
             }
 
-            return new RouteSample();
+            throw new Exception("Can't find RouteSample");
         }
 
         public List<RouteSample> GetRouteSamples(int resolution)
@@ -126,10 +132,9 @@ namespace Beatale.Route
             return routeSamples;
         }
 
-        public List<RouteSample> GetRouteSamples(float distance)
+        public void GetRouteSamples(float distance)
         {
-            var routeSampleList = new List<RouteSample>();
-            routeSamples = new Dictionary<float, RouteSample>();
+            curveSamples = new List<CurveSample>();
             float totalDistance = 0.0f;
             float leftDistance = 0.0f;
             Vector3 upVector = Quaternion.AngleAxis(RouteVertices[0].Roll, RouteVertices[0].Direction2) * Vector3.up;
@@ -143,30 +148,37 @@ namespace Beatale.Route
                     continue;
                 }
 
+                var curveSample = new CurveSample();
+                curveSample.Length = lut[lut.Length - 1];
+
                 float currentDistance = leftDistance;
                 float rollDifference = RouteVertices[index + 1].Roll - RouteVertices[index].Roll;
+
+                var firstVertexSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], upVector, 0);
+                firstVertexSample.Distance = 0.0f;
+                curveSample.Samples.Add(firstVertexSample);
+
                 while (currentDistance < lut[lut.Length - 1])
                 {
-                    Vector3 lastUpVector = upVector;
-                    float t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, ref lut);
-                    
                     float roll = rollDifference * currentDistance / lut[lut.Length - 1];
+                    float t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, lut);
+                    var routeSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], upVector, t);
+                    upVector = routeSample.Up;
 
-                    var routeSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, t);
-                    
-                    float angleDifference = Vector3.SignedAngle(lastUpVector, upVector, RouteVertices[index].Direction2);
-                    //routeSample.Up = Quaternion.AngleAxis(roll - angleDifference, RouteVertices[index].Direction2) * upVector;
+                    routeSample.Distance = currentDistance;
+                    curveSample.Samples.Add(routeSample);
 
-                    routeSampleList.Add(routeSamples[totalDistance] = routeSample);
                     totalDistance += distance;
                     currentDistance += distance;
                 }
                 leftDistance = currentDistance - lut[lut.Length - 1];
 
-                var lastVertexSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], ref upVector, 1);
-                routeSampleList.Add(routeSamples[totalDistance - leftDistance] = lastVertexSample);
+                var lastVertexSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], upVector, 1);
+                lastVertexSample.Distance = lut[lut.Length - 1];
+                curveSample.Samples.Add(lastVertexSample);
+                curveSamples.Add(curveSample);
             }
-            return routeSampleList;
+            routeLength = totalDistance;
         }
     }
 }
