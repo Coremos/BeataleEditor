@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Beatale.Tunnel
+namespace Beatale.TunnelSystem
 {
     public struct TunnelMesh
     {
