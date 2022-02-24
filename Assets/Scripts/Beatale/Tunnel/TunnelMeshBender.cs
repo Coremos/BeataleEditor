@@ -1,4 +1,5 @@
 using Beatale.Route;
+using Beatale.TunnelSystem;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,52 +7,122 @@ namespace Beatale.TunnelSystem
 {
     public class TunnelMeshBender : MonoBehaviour
     {
-        public float Distance = 0.1f;
+        public TunnelMeshGenerator TunnelMeshGenerator;
+        public float SamplingDistance = 0.1f;
         public RouteSpline RouteSpline;
         public GameObject Tunnel;
         public float Speed;
         public Vector3 TestVector3;
+        public TunnelMesh OriginalMesh;
+        public Transform CameraTransform;
+        public TunnelMesh BentMesh;
 
         public float Roll;
+        public float Distance;
 
-        private List<RouteSample> routeSamples;
+        private Mesh tunnelMesh;
+        private Dictionary<float, RouteSample> routeSamples;
         private int currentIndex;
         private bool isMove;
+        private bool isNeedUpdate;
 
         void Awake()
         {
-            routeSamples = RouteSpline.GetRouteSamples(Distance);
+            routeSamples = new Dictionary<float, RouteSample>();
             isMove = false;
             currentIndex = 0;
-            Tunnel.transform.position = routeSamples[0].Position;
+            Tunnel.transform.position = Vector3.zero;
+            InitializeMesh();
         }
 
-        void Bend(Mesh mesh)
+        private void InitializeMesh()
         {
-            Mesh bentVertice = mesh.
-            for (int index = 0; index < mesh.vertexCount; index++)
+            BentMesh = OriginalMesh = TunnelMesh.GenerateMesh(TunnelMeshGenerator.GenerateTunnelMesh());
+            
+            tunnelMesh = new Mesh();
+
+            tunnelMesh.vertices = BentMesh.Vertices;
+            tunnelMesh.triangles = BentMesh.Triangles;
+            tunnelMesh.uv = BentMesh.UV;
+
+            tunnelMesh.RecalculateNormals();
+            tunnelMesh.RecalculateBounds();
+            tunnelMesh.RecalculateTangents();
+
+            Tunnel.GetComponent<MeshFilter>().sharedMesh = tunnelMesh;
+        }
+
+        private void BendMesh(Mesh mesh)
+        {
+            RouteSample routeSample;
+            routeSamples.Clear();
+
+            BentMesh.Vertices = new Vector3[OriginalMesh.Vertices.Length];
+            BentMesh.Normals = new Vector3[OriginalMesh.Normals.Length];
+
+            for (int index = 0; index < BentMesh.Vertices.Length; index++)
             {
-                float distance = mesh.vertices[index].z;
+                float distance = OriginalMesh.Vertices[index].z + Distance;
+                if (!routeSamples.TryGetValue(distance, out routeSample))
+                {
+                    routeSample = RouteSpline.GetRouteSample(distance);
+                    routeSamples[distance] = routeSample;
+                }
+                BentMesh.Vertices[index] = routeSample.GetBentPosition(OriginalMesh.Vertices[index]);
+                BentMesh.Normals[index] = routeSample.GetBentNormal(OriginalMesh.Normals[index]);
             }
+
+            mesh.vertices = BentMesh.Vertices;
+            mesh.normals = BentMesh.Normals;
+
+            mesh.RecalculateBounds();
+            mesh.RecalculateTangents();
         }
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.A)) isMove = true;
+            if (Input.GetKeyDown(KeyCode.A)) isMove = !isMove;
 
             if (!isMove) return;
+            isNeedUpdate = true;
+        }
 
-            if (currentIndex < routeSamples.Count)
+        void UpdateMesh()
+        {
+            Distance += Speed * Time.deltaTime;
+            BendMesh(tunnelMesh);
+            var sample = RouteSpline.GetRouteSample(Distance);
+            CameraTransform.position = sample.Position;
+            CameraTransform.rotation = sample.Rotation;
+        }
+
+        private void LateUpdate()
+        {
+            //MeshTest();
+
+            if (isNeedUpdate)
             {
-                Tunnel.transform.position = Vector3.MoveTowards(Tunnel.transform.position, routeSamples[currentIndex].Position, Speed * Time.deltaTime);
-                Tunnel.transform.rotation = Quaternion.LookRotation(routeSamples[currentIndex].Direction, routeSamples[currentIndex].Up);
-                if (Vector3.Distance(Tunnel.transform.position, routeSamples[currentIndex].Position) == 0f)
-                {
-                    currentIndex++;
-                }
+                isNeedUpdate = false;
+                UpdateMesh();
             }
-            else currentIndex = 0;
+        }
+
+        private void MeshTest()
+        {
+            var testVertices = new Vector3[OriginalMesh.Vertices.Length];
+            var samples = new Vector3[OriginalMesh.Vertices.Length];
+            for (int index = 0; index < testVertices.Length; index++)
+            {
+                var sample = RouteSpline.GetRouteSample(OriginalMesh.Vertices[index].z + Distance);
+                samples[index] = sample.Position;
+                testVertices[index] = sample.GetBentPosition(OriginalMesh.Vertices[index]);
+            }
+
+            for (int index = 1; index < testVertices.Length; index++)
+            {
+                Debug.DrawLine(testVertices[index - 1], testVertices[index], Color.cyan);
+                Debug.DrawLine(samples[index - 1], samples[index], Color.red);
+            }
         }
     }
-
 }
