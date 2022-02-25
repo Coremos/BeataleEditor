@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Beatale.Route.Curve;
 
 namespace Beatale.TunnelSystem
 {
@@ -11,6 +12,8 @@ namespace Beatale.TunnelSystem
         public int HeightSegments = DEFAULT_HEIGHT_SEGMENTS;
         public float Radius = DEFAULT_RADIUS;
         public float Height = DEFAULT_HEIGHT;
+        public Vector3 Direction1;
+        public Vector3 Direction2;
 
         private static readonly int MIN_RADIAL_SEGMENTS = 3;
         private static readonly int MIN_HEIGHT_SEGMENTS = 1;
@@ -25,6 +28,30 @@ namespace Beatale.TunnelSystem
         public TunnelMesh GetTunnelMesh()
         {
             return TunnelMesh.GenerateMesh(GenerateTunnelMesh());
+        }
+
+        public float[] GenerateRadiusTable(int resolution)
+        {
+            Vector3 position1, position2, direction1, direction2;
+            position1 = position2 = direction1 = direction2 = Vector3.zero;
+            position1.x = 1.0f;
+            position2.y = 1.0f;
+            direction1 = Direction1;
+            direction2 = Direction2;
+            //direction1.z = 0.5f;
+            //direction2.z = -0.1f;
+            var lut = CubicCurve.GenerateLengthTable(position1, direction1, direction2, position2, resolution);
+
+            float lengthStep = 1.0f / (resolution - 1);
+            float[] table = new float[resolution];
+            table[0] = 1;
+            for (int index = 1; index < resolution - 1; index++)
+            {
+                var t = CubicCurve.DistanceToTValue(lengthStep * index, lut);
+                table[index] = CubicCurve.GetPoint(position1, direction1, direction2, position2, t).x;
+            }
+            table[resolution - 1] = 0;
+            return table;
         }
 
         public Mesh GenerateTunnelMesh()
@@ -48,13 +75,15 @@ namespace Beatale.TunnelSystem
 
             int columnVertexAmount = RadialSegments + 1;
 
+            float[] radiusTable = GenerateRadiusTable(HeightSegments + 1);
+
             for (int row = 0; row <= HeightSegments; row++)
             {
                 for (int column = 0; column <= RadialSegments; column++)
                 {
                     float angle = angleStep * column;
 
-                    vertices.Add(new Vector3(Radius * Mathf.Sin(angle), Radius * Mathf.Cos(angle), row * heightStep));
+                    vertices.Add(new Vector3(Radius * radiusTable[row] * Mathf.Sin(angle), Radius * radiusTable[row] * Mathf.Cos(angle), row * heightStep));
                     uvs.Add(new Vector2(1 - column * uvWidthStep, row * uvHeightStep));
 
                     if (row == 0 || column >= RadialSegments) continue;
