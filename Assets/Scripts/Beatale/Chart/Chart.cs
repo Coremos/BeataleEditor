@@ -24,6 +24,7 @@ namespace Beatale
             public float Degree;
             public GameObject TimeLineObject;
             public GameObject TunnelObject;
+            public Vector3 TunnelPosition;
 
             public Note()
             {
