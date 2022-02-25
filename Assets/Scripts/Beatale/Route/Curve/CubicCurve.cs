@@ -28,6 +28,22 @@ namespace Beatale.Route.Curve
             };
         }
 
+        public static float[] GenerateLengthTable(Vector3 position1, Vector3 direction1, Vector2 direction2, Vector3 position2, int resolution)
+        {
+            float resolutionStep = 1.0f / (resolution - 1);
+            float[] lut = new float[resolution];
+            Vector3 currentPoint = position1;
+            lut[0] = currentPoint.y;
+
+            for (int index = 1; index < resolution; index++)
+            {
+                var nextPoint = GetPoint(position1, direction1, direction2, position2, resolutionStep * index);
+                lut[index] = lut[index - 1] + nextPoint.y - currentPoint.y;
+                currentPoint = nextPoint;
+            }
+            return lut;
+        }
+
         public static float[] GenerateLUT(RouteVertex vertex1, RouteVertex vertex2, int resolution = DEFAULT_RESOLUTION)
         {
             float resolutionStep = 1.0f / (resolution - 1);
@@ -38,13 +54,13 @@ namespace Beatale.Route.Curve
             for (int index = 1; index < resolution; index++)
             {
                 var nextPoint = GetPoint(vertex1, vertex2, resolutionStep * index);
-                lut[index] += lut[index - 1] + Vector3.Magnitude(nextPoint - currentPoint);
+                lut[index] = lut[index - 1] + Vector3.Magnitude(nextPoint - currentPoint);
                 currentPoint = nextPoint;
             }
             return lut;
         }
 
-        public static float DistanceToTValue(RouteVertex vertex1, RouteVertex vertex2, float distance, float[] lut)
+        public static float DistanceToTValue(float distance, float[] lut)
         {
             for (int index = 0; index < lut.Length - 1; index++)
             {

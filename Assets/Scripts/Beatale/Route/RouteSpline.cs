@@ -19,11 +19,16 @@ namespace Beatale.Route
         private List<CurveSample> curveSamples;
         private float routeLength;
 
+        private void Awake()
+        {
+            GetRouteSamples(DEFAULT_SAMPLING_DISTANCE);
+        }
+
         private void OnDrawGizmos()
         {
-            DrawVertices();
-            DrawSpline();
-            DrawCurveSamples();
+            //DrawVertices();
+            //DrawSpline();
+            //DrawCurveSamples();
         }
 
         private void DrawCurveSample(CurveSample sample)
@@ -161,7 +166,7 @@ namespace Beatale.Route
                 while (currentDistance < lut[lut.Length - 1])
                 {
                     float roll = rollDifference * currentDistance / lut[lut.Length - 1];
-                    float t = CubicCurve.DistanceToTValue(RouteVertices[index], RouteVertices[index + 1], currentDistance, lut);
+                    float t = CubicCurve.DistanceToTValue(currentDistance, lut);
                     var routeSample = CubicCurve.GetRouteSample(RouteVertices[index], RouteVertices[index + 1], upVector, t);
                     upVector = routeSample.Up;
 
