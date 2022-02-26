@@ -1,4 +1,5 @@
 ﻿using Beatale.Route;
+using Beatale.Route.Curve;
 using Beatale.TunnelSystem;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,6 +10,7 @@ namespace Beatale.ChartSystem
     public class TunnelNoteArranger : MonoBehaviour
     {
         public TunnelManager TunnelManager;
+        public TunnelMeshGenerator TunnelMeshGenerator;
         public TunnelMeshBender TunnelMeshBender;
         public RouteSpline RouteSpline;
         public Chart Chart;
@@ -18,7 +20,8 @@ namespace Beatale.ChartSystem
         public float TunnelSpeed;
         public Stack<NoteTask> NoteTasks;
 
-        private float suddenOffset = 2;
+        private float suddenOffset = 0.0f;
+        private float[] radiusTable;
 
         public class NoteTask
         {
@@ -63,15 +66,67 @@ namespace Beatale.ChartSystem
                 Chart.Notes.Add(note);
             }
 
-            Thread thread = new Thread(ProjectNote);
-            isRun = true;
-            thread.Start();
+            TunnelMeshGenerator.GenerateTunnelMesh();
+            radiusTable = TunnelMeshGenerator.RadiusTable;
+            //Thread thread = new Thread(ProjectNote);
+            //isRun = true;
+            //thread.Start();
         }
 
         private void LateUpdate()
         {
             isNeedUpdate = true;
-            NoteArrange();
+            //NoteArrange();
+            Project();
+        }
+
+        private float GetRadius(float interval)
+        {
+            interval *= radiusTable.Length - 1;
+            int index = (int)interval;
+            if (index == interval) return radiusTable[index];
+            return radiusTable[index] + (interval - index) * (radiusTable[index + 1] - radiusTable[index]);
+        }
+
+        private void Project()
+        {
+            routeSamples.Clear();
+            for (int index = 0; index < Chart.Notes.Count; index++)
+            {
+                float timeDifference = Chart.Notes[index].Time - TunnelManager.PlayTime;
+                float distance = timeDifference * TunnelSpeed * TunnelManager.BPM;
+
+                if (distance > TunnelMeshBender.BentMesh.Length - suddenOffset) break;
+                if (distance <= 0.0f)
+                {
+                    if (Chart.Notes[index].TunnelObject == null) continue;
+                    var gameObject = Chart.Notes[index].TunnelObject;
+                    Chart.Notes[index].TunnelObject = null;
+                    NotePool.RestoreObject(gameObject);
+                    continue;
+                }
+
+                var noteInterval = distance / TunnelMeshBender.BentMesh.Length;
+                distance += TunnelMeshBender.Distance;
+
+                RouteSample routeSample;
+                if (!routeSamples.TryGetValue(distance, out routeSample))
+                {
+                    routeSample = RouteSpline.GetRouteSample(distance);
+                    routeSamples[distance] = routeSample;
+                }
+
+                var direction = Quaternion.AngleAxis(Chart.Notes[index].Degree, routeSample.Direction) * routeSample.Up;
+                var position = routeSample.Position + direction * GetRadius(noteInterval);
+                if (position.Equals(Vector3.zero)) continue;
+                
+                if (Chart.Notes[index].TunnelObject == null)
+                {
+                    Chart.Notes[index].TunnelObject = NotePool.GetObject();
+                }
+                Chart.Notes[index].TunnelObject.transform.position = position;
+                Chart.Notes[index].TunnelObject.SetActive(true);
+            }
         }
 
         private void ProjectNote()
@@ -107,7 +162,6 @@ namespace Beatale.ChartSystem
                     var position = MeshProjector.GetProjection(routeSample.Position, direction, ref TunnelMeshBender.BentMesh);
                     if (position.Equals(Vector3.zero)) continue;
                     if ((float.IsNaN(position.x) || float.IsNaN(position.y)) || float.IsNaN(position.z)) continue;
-                    Debug.DrawLine(routeSample.Position, position, Color.green);
                     var task = new NoteTask(NoteTask.TaskType.Move, Chart.Notes[index], position);
                     NoteTasks.Push(task);
                 }
