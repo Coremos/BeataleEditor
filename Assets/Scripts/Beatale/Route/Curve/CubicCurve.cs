@@ -62,11 +62,11 @@ namespace Beatale.Route.Curve
 
         public static float DistanceToTValue(float distance, float[] lut)
         {
-            for (int index = 0; index < lut.Length - 1; index++)
+            for (int index = 1; index < lut.Length; index++)
             {
-                if (distance > lut[index] && distance < lut[index + 1])
+                if (distance <= lut[index])
                 {
-                    return (index + (distance - lut[index]) / (lut[index + 1] - lut[index])) / (lut.Length - 1);
+                    return (index - 1 + (distance - lut[index - 1]) / (lut[index] - lut[index - 1])) / (lut.Length - 1);
                 }
             }
             return 0;
