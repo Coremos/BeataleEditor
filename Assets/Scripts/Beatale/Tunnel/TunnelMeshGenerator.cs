@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Beatale.Route.Curve;
+using Beatale.RouteSystem.Curve;
 
 namespace Beatale.TunnelSystem
 {

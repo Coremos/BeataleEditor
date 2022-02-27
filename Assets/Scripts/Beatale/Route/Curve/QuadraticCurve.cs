@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Beatale.Route.Curve
+namespace Beatale.RouteSystem.Curve
 {
     public class QuadraticCurve
     {

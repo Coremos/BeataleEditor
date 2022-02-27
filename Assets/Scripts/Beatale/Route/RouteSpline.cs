@@ -1,10 +1,10 @@
-﻿using Beatale.Route.Curve;
+﻿using Beatale.RouteSystem.Curve;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Beatale.Route
+namespace Beatale.RouteSystem
 {
     public class RouteSpline : MonoBehaviour
     {

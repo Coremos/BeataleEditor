@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Beatale.Route
+namespace Beatale.RouteSystem
 {
     public enum VertexType
     {
