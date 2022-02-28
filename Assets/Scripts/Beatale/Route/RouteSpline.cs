@@ -1,7 +1,6 @@
 ﻿using Beatale.RouteSystem.Curve;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Beatale.RouteSystem
