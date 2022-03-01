@@ -168,9 +168,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 269341171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 428a8ee96c1c2ea49879361db20b9820, type: 3}
+  m_Script: {fileID: 11500000, guid: dd19e517d4890394c9fe861a7609d57f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimeLineManager: {fileID: 1259565166}
 --- !u!1 &339639013
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,10 +1721,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df09b01532e74344899c191c6f2b8e34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TunerManager: {fileID: 0}
+  TunnelManager: {fileID: 0}
   NotePrefab: {fileID: 609701658259721592, guid: 6bda8acd90d0ef94fa03940811f47c68, type: 3}
-  ContentRect: {fileID: 269341172}
   TimeLineMark: {fileID: 881433720}
+  ContentRect: {fileID: 269341172}
   areaStart: 0
   areaEnd: 0
   ViewStart: 0
@@ -1881,7 +1882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BPM: 0
-  Time: 0
+  PlayTime: 0
   MusicManager: {fileID: 0}
 --- !u!224 &1572370681 stripped
 RectTransform:
