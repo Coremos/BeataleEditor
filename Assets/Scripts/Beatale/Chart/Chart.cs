@@ -18,6 +18,11 @@ namespace Beatale
 
         public enum NoteType { None = -1, Tap, Long }
 
+        public class NoteVertex
+        {
+
+        }
+
         public class Note
         {
             public float Time;
