@@ -20,7 +20,9 @@ namespace Beatale
 
         public class NoteVertex
         {
-
+            public float Degree;
+            public Vector3 Direction1;
+            public Vector3 Direction2;
         }
 
         public class Note
