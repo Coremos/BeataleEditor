@@ -21,6 +21,7 @@ namespace Beatale
         public class NoteVertex
         {
             public float Degree;
+            public float Width;
             public Vector3 Direction1;
             public Vector3 Direction2;
         }
