@@ -25,9 +25,9 @@ namespace Beatale.RouteSystem
 
         private void OnDrawGizmos()
         {
-            //DrawVertices();
-            //DrawSpline();
-            //DrawCurveSamples();
+            DrawVertices();
+            DrawSpline();
+            DrawCurveSamples();
         }
 
         private void DrawCurveSample(CurveSample sample)

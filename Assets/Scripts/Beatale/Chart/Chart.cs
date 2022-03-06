@@ -17,15 +17,7 @@ namespace Beatale
         }
 
         public enum NoteType { None = -1, Tap, Long }
-
-        public class NoteVertex
-        {
-            public float Degree;
-            public float Width;
-            public Vector3 Direction1;
-            public Vector3 Direction2;
-        }
-
+                
         public class Note
         {
             public float Time;
@@ -53,6 +45,14 @@ namespace Beatale
             {
 
             }
+        }
+
+        public class NoteVertex
+        {
+            public float Degree;
+            public float Width;
+            public Vector3 Direction1;
+            public Vector3 Direction2;
         }
 
         public class LongNote : Note
