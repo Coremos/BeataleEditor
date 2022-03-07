@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Beatale.ChartSystem
 {
-    public class NotePool : MonoBehaviour
-    {
+    public abstract class ObjectPool : MonoBehaviour
+    { 
         public GameObject Prefab;
         private Queue<GameObject> objectPool;
 
         private void Awake()
         {
             objectPool = new Queue<GameObject>();
-            InstantiateObject(1000);
+            InstantiateObject(500);
         }
 
         private void InstantiateObject(int count)

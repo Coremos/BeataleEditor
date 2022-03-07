@@ -14,7 +14,7 @@ namespace Beatale.ChartSystem
         public TunnelMeshBender TunnelMeshBender;
         public RouteSpline RouteSpline;
         public Chart Chart;
-        public NotePool NotePool;
+        public ObjectPool NotePool;
         public float Interval;
 
         public float TunnelSpeed;
@@ -86,6 +86,15 @@ namespace Beatale.ChartSystem
             int index = (int)interval;
             if (index == interval) return radiusTable[index];
             return radiusTable[index] + (interval - index) * (radiusTable[index + 1] - radiusTable[index]);
+        }
+
+        private void ProjectLongNotes()
+        {
+            routeSamples.Clear();
+            for (int index = 0; index < Chart.LongNotes.Count; index++)
+            {
+
+            }
         }
 
         private void Project()
