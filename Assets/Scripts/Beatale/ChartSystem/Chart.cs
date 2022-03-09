@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Beatale.ChartSystem
@@ -55,7 +56,10 @@ namespace Beatale.ChartSystem
 
     public class LongNoteSampler
     {
+        public List<LongNoteSample> GetLongNoteSamples()
+        {
 
+        }
     }
 
     public class LongNote : Note
