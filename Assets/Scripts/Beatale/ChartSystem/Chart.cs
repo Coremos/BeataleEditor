@@ -17,6 +17,11 @@ namespace Beatale.ChartSystem
 
     public enum NoteType { None = -1, Tap, Long }
 
+    public struct NotePosition
+    {
+        
+    }
+
     public class Note
     {
         public float Time;

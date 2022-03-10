@@ -138,6 +138,11 @@ namespace Beatale.ChartSystem
             }
         }
 
+        private void ArrangeNote()
+        {
+            
+        }
+
         private void ProjectNote()
         {
             while (isRun)
