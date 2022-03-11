@@ -63,7 +63,8 @@ namespace Beatale.ChartSystem
     {
         public List<LongNoteSample> GetLongNoteSamples()
         {
-
+            var samples = new List<LongNoteSample>();
+            return samples;
         }
     }
 
