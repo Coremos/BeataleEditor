@@ -19,7 +19,9 @@ namespace Beatale.ChartSystem
 
     public struct NotePosition
     {
-        
+        public float Bar;
+        public int Numerator;
+        public int Denominator;
     }
 
     public class Note
