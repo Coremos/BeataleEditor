@@ -63,11 +63,14 @@ namespace Beatale.ChartSystem
 
     public class LongNoteSampler
     {
+        private static int DEFAULT_RESOLUTION = 10;
+
         public List<LongNoteSample> GetLongNoteSamples()
         {
             var samples = new List<LongNoteSample>();
             return samples;
         }
+
     }
 
     public class LongNote : Note
