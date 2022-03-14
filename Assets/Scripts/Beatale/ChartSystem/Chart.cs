@@ -65,12 +65,16 @@ namespace Beatale.ChartSystem
     {
         private static int DEFAULT_RESOLUTION = 10;
 
-        public List<LongNoteSample> GetLongNoteSamples()
+        public List<LongNoteSample> GetLongNoteSamples(LongNoteVertex vertex1, LongNoteVertex vertex2, int resolution)
         {
             var samples = new List<LongNoteSample>();
             return samples;
         }
 
+        public LongNoteSample GetLongNoteSample(LongNoteVertex vertex1, LongNoteVertex vertex2, float t)
+        {
+            var sample = new LongNoteSample();
+        }
     }
 
     public class LongNote : Note
