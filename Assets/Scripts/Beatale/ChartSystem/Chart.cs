@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Beatale.RouteSystem.Curve;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -67,13 +68,17 @@ namespace Beatale.ChartSystem
 
         public List<LongNoteSample> GetLongNoteSamples(LongNoteVertex vertex1, LongNoteVertex vertex2, int resolution)
         {
+            var vector1 = new Vector3(vertex1.Degree, 0.0f, 0.0f);
+            var vector2 = new Vector3(vertex2.Degree, 0.0f, 0.0f);
             var samples = new List<LongNoteSample>();
             return samples;
         }
 
         public LongNoteSample GetLongNoteSample(LongNoteVertex vertex1, LongNoteVertex vertex2, float t)
         {
+            
             var sample = new LongNoteSample();
+            return sample;
         }
     }
 
