@@ -4,18 +4,21 @@
     {
         public float Degree;
         public float Width;
+        public float Time;
 
-        public LongNoteSample(float degree, float width)
+        public LongNoteSample(float degree, float width, float time)
         {
             Degree = degree;
             Width = width;
+            Time = time;
         }
 
         public static LongNoteSample Lerp(LongNoteSample sample1, LongNoteSample sample2, float t)
         {
             return new LongNoteSample(
                 sample1.Degree + t * (sample2.Degree - sample1.Degree),
-                sample1.Width + t * (sample2.Width - sample1.Width)
+                sample1.Width + t * (sample2.Width - sample1.Width),
+                sample1.Time + t * (sample2.Time - sample1.Time)
                 );
         }
 
@@ -25,7 +28,8 @@
 
             var routeSample = (LongNoteSample)obj;
             return Degree.Equals(routeSample.Degree) &&
-                Width.Equals(routeSample.Width);
+                Width.Equals(routeSample.Width) &&
+                Time.Equals(routeSample.Time);
         }
 
         public override int GetHashCode()
