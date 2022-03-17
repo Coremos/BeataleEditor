@@ -27,6 +27,7 @@ namespace Beatale.ChartSystem
     {
         public float Time;
         public float Degree;
+        public NotePosition Position;
         public GameObject TimeLineObject;
         public GameObject TunnelObject;
         public Vector3 TunnelPosition;

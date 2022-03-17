@@ -97,6 +97,15 @@ namespace Beatale.ChartSystem
             }
         }
 
+        public void ArrangeLongNote(LongNote longNote)
+        {
+            for (int index = 0; index < longNote.LongNoteVertices.Count; index++)
+            {
+                longNote.LongNoteVertices[index];
+                
+            }
+        }
+
         private void Project()
         {
             routeSamples.Clear();

@@ -10,18 +10,37 @@ namespace Beatale.ChartSystem
             //var BPMChanges = Chart.BPMChanges.Where(x => x.BPM > 10);
         }
 
-        public static void CalculateNoteTime()
+        public static void CalculateLongNoteTime(IEnumerable<LongNote> longNotes)
         {
+            foreach (var note in longNotes)
+            {
+                
+            }
+            
+        }
 
+        public static float CaculatePositionTime(List<NotePosition> positions)
+        {
+            var bpm = 60.0f;
+            var oneBeatTime = 60.0f / bpm;
+            for (int index = 0; index < positions.Count; index++)
+            {
+                var position = positions[index];
+                float time = position.Bar * oneBeatTime + (position.Numerator / position.Denominator);
+            }
+            return 0;
         }
 
         public static float CaculateNotesTime(List<Note> notes)
         {
+            var bpm = 60.0f;
+            var oneBeatTime = 60.0f / bpm;
             for (int index = 0; index < notes.Count; index++)
             {
-                notes[index].Position;
-
+                var position = notes[index].Position;
+                float time = position.Bar * oneBeatTime + (position.Numerator / position.Denominator);
             }
+            return 0;
         }
 
         public static float CalculateFloatTime(int position, int numerator, int denominator, float bpm)
