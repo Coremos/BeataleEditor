@@ -21,6 +21,7 @@ namespace Beatale.ChartSystem
         public float Bar;
         public int Numerator;
         public int Denominator;
+        public int Time;
     }
 
     public class Note
