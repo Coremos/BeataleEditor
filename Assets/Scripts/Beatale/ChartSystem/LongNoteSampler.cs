@@ -8,7 +8,15 @@ namespace Beatale.ChartSystem
     {
         private const int DEFAULT_RESOLUTION = 10;
 
-        public List<LongNoteSample> GetLongNoteSamples(LongNote longNote, int resolution = DEFAULT_RESOLUTION)
+        public static void LongNoteSampling(List<LongNote> longNotes)
+        {
+            for (int index = 0; index < longNotes.Count; index++)
+            {
+                longNotes[index].LongNoteSamples = GetLongNoteSamples(longNotes[index]);
+            };
+        }
+
+        public static List<LongNoteSample> GetLongNoteSamples(LongNote longNote, int resolution = DEFAULT_RESOLUTION)
         {
             var samples = new List<LongNoteSample>();
             for (int noteIndex = 0; noteIndex < longNote.LongNoteVertices.Count - 1; noteIndex++)
