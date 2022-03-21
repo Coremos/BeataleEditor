@@ -12,13 +12,28 @@ namespace Beatale.ChartSystem
         public List<Note> Notes;
         public List<LongNote> LongNotes;
         public List<BPMChange> BPMChanges;
+        public float Offset;
+        public double Length;
+
+        public void AnalyzeBPM()
+        {
+            var bpmList = new Dictionary<double, double>();
+            var bpm = BPM;
+            var length = Length + Offset;
+            for (int index = 0; index < BPMChanges.Count - 1; index++)
+            {
+                var currentPosition = BPMChanges[index].Position;
+                var subtraction = BPMChanges[index + 1].Position.Subtract(currentPosition);
+                
+            }
+        }
     }
 
     public enum NoteType { None = -1, Tap, Long }
 
     public struct NotePosition
     {
-        public float Bar;
+        public int Bar;
         public int Numerator;
         public int Denominator;
         public int Time;
@@ -78,6 +93,7 @@ namespace Beatale.ChartSystem
     {
         public float Time;
         public GameObject TunerObject;
+        public NotePosition Position;
         public float BPM;
     }
 }
