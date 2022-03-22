@@ -16,10 +16,16 @@ namespace Beatale.ChartSystem
 
             var s = chart.Notes.Select(note => note.Position);
         }
-
-        public void LoadLongNotes()
+        public void ConnectVertices(List<List<Vector3>> verticesList)
         {
-            
+            for (int row = 0; row < verticesList.Count; row++)
+            {
+                var list = verticesList[row];
+                for (int index = 0; index < list.Count; index++)
+                {
+
+                }
+            }
         }
 
         public void Project()
