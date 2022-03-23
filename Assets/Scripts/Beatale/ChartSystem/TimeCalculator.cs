@@ -4,17 +4,36 @@ namespace Beatale.ChartSystem
 {
     public class TimeCalculator
     {
+        public void GetBPM(Chart chart)
+        {
+            var bpmList = new Dictionary<double, double>();
+            var bpm = chart.BPM;
+            var length = chart.Length + chart.Offset;
+            for (int index = 0; index < chart.BPMChanges.Count; index++)
+            {
+                chart.BPMChanges[index];
+            }
+        }
+
+        public void GetTime(Chart chart)
+        {
+            var lastBPM = chart.BPMChanges[0].Position;
+
+
+            for (int index = 0; index < )
+        }
+
         public void GetFractionTime()
         {
             int position = 0, numerator = 0, denominator = 0;
             //var BPMChanges = Chart.BPMChanges.Where(x => x.BPM > 10);
         }
 
-        public static void CalculateLongNoteTime(IEnumerable<LongNote> longNotes)
+        public static void CalculateLongNoteTime(List<LongNote> longNotes)
         {
-            foreach (var note in longNotes)
+            for (int index = 0; index < longNotes.Count; index++)
             {
-                
+                //longNotes[index].LongNoteSamples
             }
             
         }
@@ -43,12 +62,17 @@ namespace Beatale.ChartSystem
             return 0;
         }
 
-        public static float CalculateFloatTime(int position, int numerator, int denominator, float bpm)
+        public static float CalculateFloatTime(NotePosition position, double bpm)
+        {
+            return CalculateFloatTime(position.Bar, position.Numerator, position.Denominator, bpm);
+        }
+
+        public static float CalculateFloatTime(int position, int numerator, int denominator, double bpm)
         {
             var oneBeatTime = 60.0f / bpm;
             float time = position * oneBeatTime + (numerator / denominator);
             return time;
-        }
+0        }
 
         public static void CalculateFractionTime(float time, float bpm, float division, out int position, out int numerator, out int denominator)
         {
