@@ -101,7 +101,7 @@ namespace Beatale.ChartSystem
         {
             for (int index = 0; index < longNote.LongNoteVertices.Count; index++)
             {
-                longNote.LongNoteVertices[index];
+                //longNote.LongNoteVertices[index];
                 
             }
         }
