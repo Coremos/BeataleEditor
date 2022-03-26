@@ -28,6 +28,13 @@ namespace Beatale.ChartSystem
                 var nextIndex = 0;
                 for (int index = 0; index < list.Count; index++)
                 {
+                    if (nextIndex > 0 && nextIndex <= nextList.Count - 1)
+                    {
+                        triangles.Add(vertexIndex + index);
+                        triangles.Add(vertexIndex + nextIndex - 1 + list.Count);
+                        triangles.Add(vertexIndex + nextIndex + list.Count);
+                    }
+
                     if (index < list.Count - 1)
                     {
                         triangles.Add(vertexIndex + index);
@@ -68,6 +75,20 @@ namespace Beatale.ChartSystem
                         var vector = new Vector3(angle, 0.0f);
                         //vertices = 
                     }
+                }
+            }
+        }
+
+        public void CalculateUVs(List<List<Vector3>> verticesList)
+        {
+            var uvs = new List<Vector2>();
+            var rowStep = 1 / (verticesList.Count - 1);
+            for (int row = 0; row < verticesList.Count; row++)
+            {
+                var step = 1 / (verticesList[row].Count - 1);
+                for (int column = 0; column < verticesList[row].Count; column++)
+                {
+
                 }
             }
         }
