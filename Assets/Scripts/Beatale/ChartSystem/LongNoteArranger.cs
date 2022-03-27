@@ -88,7 +88,8 @@ namespace Beatale.ChartSystem
                 var step = 1 / (verticesList[row].Count - 1);
                 for (int column = 0; column < verticesList[row].Count; column++)
                 {
-
+                    var uv = new Vector2(column * step, rowStep * row);
+                    uvs.Add(uv);
                 }
             }
         }
