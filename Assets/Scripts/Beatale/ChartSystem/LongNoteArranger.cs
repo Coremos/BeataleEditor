@@ -79,7 +79,7 @@ namespace Beatale.ChartSystem
             }
         }
 
-        public void CalculateUVs(List<List<Vector3>> verticesList)
+        public Vector2[] CalculateUVs(List<List<Vector3>> verticesList)
         {
             var uvs = new List<Vector2>();
             var rowStep = 1 / (verticesList.Count - 1);
@@ -92,6 +92,7 @@ namespace Beatale.ChartSystem
                     uvs.Add(uv);
                 }
             }
+            return uvs.ToArray();
         }
     }
 }
