@@ -73,7 +73,7 @@ namespace Beatale.ChartSystem
                     for (var angle = startAngle; angle < endAngle; angle += angleStep)
                     {
                         var vector = new Vector3(angle, 0.0f);
-                        //vertices = 
+                        vertices.Add(vector);
                     }
                 }
             }
