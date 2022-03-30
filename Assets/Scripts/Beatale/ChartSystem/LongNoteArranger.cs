@@ -31,8 +31,8 @@ namespace Beatale.ChartSystem
                     if (nextIndex > 0 && nextIndex <= nextList.Count - 1)
                     {
                         triangles.Add(vertexIndex + index);
-                        triangles.Add(vertexIndex + nextIndex - 1 + list.Count);
-                        triangles.Add(vertexIndex + nextIndex + list.Count);
+                        triangles.Add(vertexIndex + list.Count + nextIndex - 1);
+                        triangles.Add(vertexIndex + list.Count + nextIndex);
                     }
 
                     if (index < list.Count - 1)
@@ -40,16 +40,17 @@ namespace Beatale.ChartSystem
                         triangles.Add(vertexIndex + index);
                         triangles.Add(vertexIndex + list.Count + nextIndex);
                         triangles.Add(vertexIndex + index + 1);
+
+                        if (nextIndex < nextList.Count - 1) nextIndex++;
                     }
                     else
                     {
-                        if (nextIndex == nextList.Count - 1)
+                        while (nextIndex < nextList.Count)
                         {
-
-                        }
-                        while(nextIndex < nextList.Count)
-                        {
-
+                            triangles.Add(vertexIndex + index);
+                            triangles.Add(vertexIndex + list.Count + nextIndex - 1);
+                            triangles.Add(vertexIndex + list.Count + nextIndex);
+                            nextIndex++;
                         }
                     }
                 }
