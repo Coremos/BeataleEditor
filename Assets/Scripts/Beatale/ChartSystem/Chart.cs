@@ -36,7 +36,7 @@ namespace Beatale.ChartSystem
         public int Bar;
         public int Numerator;
         public int Denominator;
-        public int Time;
+        public double Time;
     }
 
     public class Note
