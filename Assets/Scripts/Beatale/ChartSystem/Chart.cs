@@ -14,19 +14,6 @@ namespace Beatale.ChartSystem
         public List<BPMChange> BPMChanges;
         public float Offset;
         public double Length;
-
-        public void AnalyzeBPM()
-        {
-            var bpmList = new Dictionary<double, double>();
-            var bpm = BPM;
-            var length = Length + Offset;
-            for (int index = 0; index < BPMChanges.Count - 1; index++)
-            {
-                var currentPosition = BPMChanges[index].Position;
-                var subtraction = BPMChanges[index + 1].Position.Subtract(currentPosition);
-                
-            }
-        }
     }
 
     public enum NoteType { None = -1, Tap, Long }
@@ -58,15 +45,6 @@ namespace Beatale.ChartSystem
             Note newNote = new Note();
             return newNote;
         }
-
-    }
-
-    public class TapNote : Note
-    {
-        public TapNote()
-        {
-
-        }
     }
 
     public class LongNoteVertex
@@ -74,6 +52,7 @@ namespace Beatale.ChartSystem
         public float Degree;
         public float Width;
         public float Time;
+        public NotePosition Position;
         public Vector2 Direction1;
         public Vector2 Direction2;
     }
@@ -91,9 +70,8 @@ namespace Beatale.ChartSystem
 
     public class BPMChange
     {
-        public float Time;
-        public GameObject TunerObject;
+        public GameObject TunnelObject;
         public NotePosition Position;
-        public float BPM;
+        public double BPM;
     }
 }
