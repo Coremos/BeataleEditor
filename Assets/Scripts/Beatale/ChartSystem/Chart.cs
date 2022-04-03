@@ -12,8 +12,15 @@ namespace Beatale.ChartSystem
         public List<Note> Notes;
         public List<LongNote> LongNotes;
         public List<BPMChange> BPMChanges;
-        public float Offset;
+        public double Offset;
         public double Length;
+
+        public Chart()
+        {
+            Notes = new List<Note>();
+            LongNotes = new List<LongNote>();
+            BPMChanges = new List<BPMChange>();
+        }
     }
 
     public enum NoteType { None = -1, Tap, Long }
