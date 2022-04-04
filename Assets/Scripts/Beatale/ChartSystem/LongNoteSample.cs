@@ -4,9 +4,9 @@
     {
         public float Degree;
         public float Width;
-        public float Time;
+        public double Time;
 
-        public LongNoteSample(float degree, float width, float time)
+        public LongNoteSample(float degree, float width, double time)
         {
             Degree = degree;
             Width = width;
