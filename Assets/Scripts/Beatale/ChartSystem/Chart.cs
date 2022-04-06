@@ -33,6 +33,11 @@ namespace Beatale.ChartSystem
         public double Time;
     }
 
+    public class ChartObject
+    {
+        NotePosition Position;
+    }
+
     public class Note
     {
         public float Time;
@@ -44,7 +49,7 @@ namespace Beatale.ChartSystem
 
         public Note()
         {
-
+            Position = new NotePosition();
         }
 
         public Note CopyDeep(Note note)
