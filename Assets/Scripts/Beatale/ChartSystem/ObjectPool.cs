@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Beatale.ChartSystem
 {
-    public abstract class ObjectPool : MonoBehaviour
+    public class ObjectPool : MonoBehaviour
     { 
         public GameObject Prefab;
         private Queue<GameObject> objectPool;
