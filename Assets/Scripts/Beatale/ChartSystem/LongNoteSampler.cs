@@ -27,12 +27,12 @@ namespace Beatale.ChartSystem
                 var vector1 = new Vector3(vertex1.Degree, 0.0f, 0.0f);
                 var vector2 = new Vector3(vertex2.Degree, 1.0f, 0.0f);
 
-                var lengthTable = CubicCurve.GenerateLengthTable(vector1, vertex1.Direction2, vertex2.Direction1, vector2, resolution);
-                var lengthStep = 1.0f / (resolution - 1);
+                var lengthTable = CubicCurve.GenerateLUT(vector1, vertex1.Direction2, vertex2.Direction1, vector2, resolution);
+                var lengthStep = lengthTable[resolution - 1] / (resolution - 1);
 
-                for (int index = 0; index < resolution - 1; index++)
+                for (int index = 0; index < resolution; index++)
                 {
-                    if (index == resolution - 2 && noteIndex != longNote.LongNoteVertices.Count - 2) break;
+                    if (index == resolution - 1 && noteIndex != longNote.LongNoteVertices.Count - 2) break;
                     
                     var t = CubicCurve.DistanceToTValue(lengthStep * index, lengthTable);
                     

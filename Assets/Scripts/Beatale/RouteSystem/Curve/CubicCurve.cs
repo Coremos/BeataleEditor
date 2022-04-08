@@ -59,6 +59,22 @@ namespace Beatale.RouteSystem.Curve
             }
             return lut;
         }
+        
+        public static float[] GenerateLUT(Vector3 position1, Vector3 direction1, Vector2 direction2, Vector3 position2, int resolution = DEFAULT_RESOLUTION)
+        {
+            float resolutionStep = 1.0f / (resolution - 1);
+            float[] lut = new float[resolution];
+            lut[0] = 0;
+            Vector3 currentPoint = position1;
+
+            for (int index = 1; index < resolution; index++)
+            {
+                var nextPoint = GetPoint(position1, direction1, direction2, position2, resolutionStep * index); ;
+                lut[index] = lut[index - 1] + Vector3.Magnitude(nextPoint - currentPoint);
+                currentPoint = nextPoint;
+            }
+            return lut;
+        }
 
         public static float DistanceToTValue(float distance, float[] lut)
         {
