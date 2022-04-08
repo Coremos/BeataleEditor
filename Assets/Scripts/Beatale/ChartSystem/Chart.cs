@@ -25,14 +25,7 @@ namespace Beatale.ChartSystem
 
     public enum NoteType { None = -1, Tap, Long }
 
-    public struct NotePosition
-    {
-        public int Bar;
-        public int Numerator;
-        public int Denominator;
-        public double Time;
-    }
-
+    
     public class ChartObject
     {
         NotePosition Position;
