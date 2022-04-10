@@ -13,6 +13,8 @@ namespace Beatale.ChartSystem
             for (int index = 0; index < longNotes.Count; index++)
             {
                 longNotes[index].LongNoteSamples = GetLongNoteSamples(longNotes[index]);
+                longNotes[index].StartTime = longNotes[index].LongNoteSamples[0].Time;
+                longNotes[index].EndTime = longNotes[index].LongNoteSamples[longNotes[index].LongNoteSamples.Count - 1].Time;
             }
         }
 
@@ -29,16 +31,16 @@ namespace Beatale.ChartSystem
 
                 var lengthTable = CubicCurve.GenerateLUT(vector1, vertex1.Direction2, vertex2.Direction1, vector2, resolution);
                 var lengthStep = lengthTable[resolution - 1] / (resolution - 1);
-
                 for (int index = 0; index < resolution; index++)
                 {
                     if (index == resolution - 1 && noteIndex != longNote.LongNoteVertices.Count - 2) break;
                     
                     var t = CubicCurve.DistanceToTValue(lengthStep * index, lengthTable);
-                    
-                    var degree = CubicCurve.GetPoint(vector1, vertex1.Direction2, vertex2.Direction1, vector2, t).x;
+
+                    var point = CubicCurve.GetPoint(vector1, vertex1.Direction2, vertex2.Direction1, vector2, t);
+                    var degree = point.x;
                     var width = vertex1.Width + t * (vertex2.Width - vertex1.Width);
-                    var time = vertex1.Time + t * (vertex2.Position.Time - vertex1.Position.Time);
+                    var time = vertex1.Time + point.y * (vertex2.Position.Time - vertex1.Position.Time);
                     samples.Add(new LongNoteSample(degree, width, time));
                 }
             }

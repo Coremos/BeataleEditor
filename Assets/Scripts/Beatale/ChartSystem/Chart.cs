@@ -64,9 +64,13 @@ namespace Beatale.ChartSystem
 
     public class LongNote : Note
     {
+        public double StartTime;
+        public double EndTime;
         public float Length;
+
         public List<LongNoteVertex> LongNoteVertices;
         public List<LongNoteSample> LongNoteSamples;
+        public LongNoteMesh LongNoteMesh;
         public LongNote()
         {
             LongNoteVertices = new List<LongNoteVertex>();
