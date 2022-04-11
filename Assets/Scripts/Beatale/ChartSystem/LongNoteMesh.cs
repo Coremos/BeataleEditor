@@ -18,7 +18,7 @@ namespace Beatale.ChartSystem
     public class LongNoteMesh
     {
         public AngleVertex[] AngleVertices;
-        public List<Vector3> Vertices;
+        public Vector3[] Vertices;
         public int[] Triangles;
         public Vector2[] UVS;
     }
