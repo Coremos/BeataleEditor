@@ -3,28 +3,28 @@ using UnityEngine;
 
 namespace Beatale.ChartSystem
 {
-    public class ObjectPool : MonoBehaviour
-    { 
-        public GameObject Prefab;
-        private Queue<GameObject> objectPool;
-
+    public abstract class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
+    {
+        public T Prefab;
+        private Queue<T> objectPool;
+        
         private void Awake()
         {
-            objectPool = new Queue<GameObject>();
-            InstantiateObject(500);
+            objectPool = new Queue<T>();
+            InstantiateObject(5);
         }
 
         private void InstantiateObject(int count)
         {
-            for(int index = 0; index < count; index++)
+            for (int index = 0; index < count; index++)
             {
                 var gameObject = Instantiate(Prefab, transform);
-                gameObject.SetActive(false);
+                gameObject.gameObject.SetActive(false);
                 objectPool.Enqueue(gameObject);
             }
         }
 
-        public GameObject GetObject()
+        public T GetObject()
         {
             if (objectPool.Count == 0)
             {
@@ -34,9 +34,9 @@ namespace Beatale.ChartSystem
             return gameObject;
         }
 
-        public void RestoreObject(GameObject gameObject)
+        public void RestoreObject(T gameObject)
         {
-            gameObject.SetActive(false);
+            gameObject.gameObject.SetActive(false);
             objectPool.Enqueue(gameObject);
         }
     }
