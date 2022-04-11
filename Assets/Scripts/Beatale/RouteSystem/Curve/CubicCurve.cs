@@ -69,7 +69,7 @@ namespace Beatale.RouteSystem.Curve
 
             for (int index = 1; index < resolution; index++)
             {
-                var nextPoint = GetPoint(position1, direction1, direction2, position2, resolutionStep * index); ;
+                var nextPoint = GetPoint(position1, direction1, direction2, position2, resolutionStep * index);
                 lut[index] = lut[index - 1] + Vector3.Magnitude(nextPoint - currentPoint);
                 currentPoint = nextPoint;
             }
@@ -85,7 +85,7 @@ namespace Beatale.RouteSystem.Curve
                     return (index - 1 + (distance - lut[index - 1]) / (lut[index] - lut[index - 1])) / (lut.Length - 1);
                 }
             }
-            return 0;
+            return 1;
         }
 
         public static Vector3 GetVelocity(RouteVertex vertex1, RouteVertex vertex2, float t)
