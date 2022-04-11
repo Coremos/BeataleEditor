@@ -6,7 +6,7 @@ namespace Beatale.ChartSystem
 {
     public class LongNoteSampler
     {
-        private const int DEFAULT_RESOLUTION = 10;
+        private const int DEFAULT_RESOLUTION = 30;
 
         public static void LongNoteSampling(List<LongNote> longNotes)
         {
@@ -29,18 +29,22 @@ namespace Beatale.ChartSystem
                 var vector1 = new Vector3(vertex1.Degree, 0.0f, 0.0f);
                 var vector2 = new Vector3(vertex2.Degree, 1.0f, 0.0f);
 
-                var lengthTable = CubicCurve.GenerateLUT(vector1, vertex1.Direction2, vertex2.Direction1, vector2, resolution);
+                var direction1 = (Vector3)vertex1.Direction2 + vector1;
+                var direction2 = (Vector3)vertex2.Direction1 + vector2;
+
+                var lengthTable = CubicCurve.GenerateLUT(vector1, direction1, direction2, vector2, resolution);
                 var lengthStep = lengthTable[resolution - 1] / (resolution - 1);
+
                 for (int index = 0; index < resolution; index++)
                 {
                     if (index == resolution - 1 && noteIndex != longNote.LongNoteVertices.Count - 2) break;
-                    
+
                     var t = CubicCurve.DistanceToTValue(lengthStep * index, lengthTable);
 
-                    var point = CubicCurve.GetPoint(vector1, vertex1.Direction2, vertex2.Direction1, vector2, t);
+                    var point = CubicCurve.GetPoint(vector1, direction1, direction2, vector2, t);
                     var degree = point.x;
                     var width = vertex1.Width + t * (vertex2.Width - vertex1.Width);
-                    var time = vertex1.Time + point.y * (vertex2.Position.Time - vertex1.Position.Time);
+                    var time = vertex1.Position.Time + t * (vertex2.Position.Time - vertex1.Position.Time);
                     samples.Add(new LongNoteSample(degree, width, time));
                 }
             }
