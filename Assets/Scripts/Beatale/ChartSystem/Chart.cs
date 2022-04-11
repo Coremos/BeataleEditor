@@ -37,7 +37,7 @@ namespace Beatale.ChartSystem
         public float Degree;
         public NotePosition Position;
         public GameObject TimeLineObject;
-        public GameObject TunnelObject;
+        public NoteTestObject TunnelObject;
         public Vector3 TunnelPosition;
 
         public Note()
@@ -62,7 +62,7 @@ namespace Beatale.ChartSystem
         public Vector2 Direction2;
     }
 
-    public class LongNote : Note
+    public class LongNote
     {
         public double StartTime;
         public double EndTime;
@@ -71,6 +71,8 @@ namespace Beatale.ChartSystem
         public List<LongNoteVertex> LongNoteVertices;
         public List<LongNoteSample> LongNoteSamples;
         public LongNoteMesh LongNoteMesh;
+        public LongNoteObject TunnelObject;
+
         public LongNote()
         {
             LongNoteVertices = new List<LongNoteVertex>();
