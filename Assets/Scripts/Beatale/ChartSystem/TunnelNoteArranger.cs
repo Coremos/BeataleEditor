@@ -14,7 +14,8 @@ namespace Beatale.ChartSystem
         public TunnelMeshBender TunnelMeshBender;
         public RouteSpline RouteSpline;
         public Chart Chart;
-        public ObjectPool NotePool;
+        public NoteObjectPool NotePool;
+        public LongNoteObjectPool LongNotePool;
         public AudioSource SoundEffectTest;
         public float Interval;
 
@@ -33,84 +34,6 @@ namespace Beatale.ChartSystem
         private Dictionary<float, RouteSample> routeSamples;
 
         public static void GetTime(Chart chart)
-        {
-            var bpmChanges = chart.BPMChanges;
-            var lastBPM = bpmChanges[0];
-
-            var notes = chart.Notes;
-            var longNotes = chart.LongNotes;
-            var nextBPMIndex = 1;
-            var oneBeatTime = 60.0 / lastBPM.BPM;
-            //var oneBeatTime = lastBPM.BPM / 60.0;
-
-            for (int index = 0; index < notes.Count; index++)
-            {
-                while (nextBPMIndex < bpmChanges.Count)
-                {
-                    if (notes[index].Position > bpmChanges[nextBPMIndex].Position)
-                    {
-                        lastBPM = bpmChanges[nextBPMIndex++];
-                        oneBeatTime = 60.0 / lastBPM.BPM;
-                        //oneBeatTime = lastBPM.BPM / 60.0;
-                        continue;
-                    }
-                    break;
-                }
-
-                var fractionValue = 0.0;
-                var position = notes[index].Position - lastBPM.Position;
-
-                if (position.Denominator != 0) fractionValue = position.Numerator / (double)position.Denominator;
-
-                notes[index].Position.Time = lastBPM.Position.Time +
-                    oneBeatTime * (position.Bar + fractionValue);
-            }
-
-            for (int index = 0; index < longNotes.Count; index++)
-            {
-
-            }
-        }
-
-        public static void GetTime2(Chart chart)
-        {
-            var bpmChanges = chart.BPMChanges;
-            var lastBPM = bpmChanges[0];
-
-            var notes = chart.Notes;
-            var longNotes = chart.LongNotes;
-            var nextBPMIndex = 1;
-            var oneBeatTime = lastBPM.BPM / 60.0;
-
-            for (int index = 0; index < notes.Count; index++)
-            {
-                while (nextBPMIndex < bpmChanges.Count)
-                {
-                    if (notes[index].Position > bpmChanges[nextBPMIndex].Position)
-                    {
-                        lastBPM = bpmChanges[nextBPMIndex++];
-                        oneBeatTime = lastBPM.BPM / 60.0;
-                        continue;
-                    }
-                    break;
-                }
-
-                var fractionValue = 0.0;
-                var position = notes[index].Position - lastBPM.Position;
-
-                if (position.Denominator != 0) fractionValue = position.Numerator / (double)position.Denominator;
-
-                notes[index].Position.Time = lastBPM.Position.Time +
-                    oneBeatTime * (position.Bar + fractionValue);
-            }
-
-            for (int index = 0; index < longNotes.Count; index++)
-            {
-
-            }
-        }
-
-        public static void GetTime3(Chart chart)
         {
             var bpmChanges = chart.BPMChanges;
             var lastBPM = bpmChanges[0];
@@ -177,8 +100,8 @@ namespace Beatale.ChartSystem
         {
             routeSamples = new Dictionary<float, RouteSample>();
             MakeChartTest();
-            TimeCalculator.CalculateBPMTime3(Chart);
-            GetTime3(Chart);
+            TimeCalculator.CalculateBPMTime(Chart);
+            GetTime(Chart);
 
             TunnelMeshGenerator.GenerateTunnelMesh();
             radiusTable = TunnelMeshGenerator.RadiusTable;
@@ -186,8 +109,8 @@ namespace Beatale.ChartSystem
             LongNoteSampler.LongNoteSampling(Chart.LongNotes);
             LongNoteArranger.Project(Chart);
             //DebugChart(Chart);
-            //DebugLongNote(Chart);
-            LongNoteArranger.DebugLongNoteMeshes(Chart);
+            DebugLongNote(Chart);
+            //LongNoteArranger.DebugLongNoteMeshes(Chart);
         }
 
         public void DebugLongNote(Chart chart)
@@ -197,7 +120,7 @@ namespace Beatale.ChartSystem
                 var vertices = chart.LongNotes[index].LongNoteSamples;
                 for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex++)
                 {
-                    Debug.Log(index + " : " + vertexIndex + " / " + vertices[vertexIndex].Degree + "도 " + vertices[vertexIndex].Width);
+                    Debug.Log(index + " : " + vertexIndex + " / " + vertices[vertexIndex].Degree + "도 " + vertices[vertexIndex].Width + ", 시간" + vertices[vertexIndex].Time);
                 }
             }
         }
@@ -234,47 +157,105 @@ namespace Beatale.ChartSystem
         {
             Chart = new Chart();
             var startBPM = new BPMChange();
-            startBPM.BPM = 174;
+            //startBPM.BPM = 174;
+            //startBPM.BPM = 175;
             //startBPM.BPM = 153;
+            startBPM.BPM = 140;
             //startBPM.BPM = 240;
             //startBPM.BPM = 60;
 
             Chart.BPMChanges.Add(startBPM);
-            var devide = 4;
-            for (int index = 0; index < 2000; index++)
-            {
-                for (int quater = 0; quater < devide; quater++)
-                {
-                    var note = new Note();
-                    note.Position.Bar = index;
-                    note.Position.Numerator = quater;
-                    note.Position.Denominator = devide;
-                    note.Degree = (index + quater) * 10;
-                    note.TunnelObject = null;
-                    note.TunnelPosition = Vector3.zero;
-                    Chart.Notes.Add(note);
-                }
-            }
+            //var devide = 4;
+            //for (int index = 0; index < 2000; index++)
+            //{
+            //    for (int quater = 0; quater < devide; quater++)
+            //    {
+            //        var note = new Note();
+            //        note.Position.Bar = index;
+            //        note.Position.Numerator = quater;
+            //        note.Position.Denominator = devide;
+            //        note.Degree = (index + quater) * 10;
+            //        note.TunnelObject = null;
+            //        note.TunnelPosition = Vector3.zero;
+            //        Chart.Notes.Add(note);
+            //    }
+            //}
 
+            //for (int index = 1; index < 9; index++)
+            //{
+            //    var bpmChange = new BPMChange();
+            //    bpmChange.Position.Bar = (index * 8) - 1;
+            //    bpmChange.BPM = startBPM.BPM * (1 - (1 & index) * 0.5);//(1 << index);
+            //    //bpmChange.BPM = startBPM.BPM * (1 + (0.25 * index));
+            //    Chart.BPMChanges.Add(bpmChange);
+            //}
+
+            AddLongNote3();
+        }
+
+        private void AddLongNote()
+        {
             var longNote = new LongNote();
             var vertex1 = new LongNoteVertex();
             vertex1.Degree = 0;
             vertex1.Width = 20;
-            vertex1.Direction2 = new Vector2(-1, 0);
+            vertex1.Direction2 = new Vector2(0, 0);
+            vertex1.Position.Bar = 0;
             var vertex2 = new LongNoteVertex();
-            vertex2.Degree = 0;
-            vertex2.Width = 180;
-            vertex2.Direction1 = new Vector2(-1, 0);
+            vertex2.Degree = 360;
+            vertex2.Width = 40;
+            vertex2.Position.Bar = 10;
+            vertex2.Direction1 = new Vector2(0, 0);
+            var vertex3 = new LongNoteVertex();
+            vertex3.Degree = 360;
+            vertex3.Width = 20;
+            vertex3.Position.Bar = 60;
             longNote.LongNoteVertices.Add(vertex1);
             longNote.LongNoteVertices.Add(vertex2);
+            longNote.LongNoteVertices.Add(vertex3);
             Chart.LongNotes.Add(longNote);
+        }
 
-            for (int index = 1; index < 9; index++)
+        private void AddLongNote2()
+        {
+
+            for (int index = 0; index < 10; index += 2)
             {
-                var bpmChange = new BPMChange();
-                bpmChange.Position.Bar = (index * 8) - 1;
-                bpmChange.BPM = startBPM.BPM * (1 - (1 & index) * 0.5);//(1 << index);
-                Chart.BPMChanges.Add(bpmChange);
+                var longNote = new LongNote();
+                var vertex1 = new LongNoteVertex();
+                vertex1.Degree = (10 * index);
+                vertex1.Width = 20;
+                vertex1.Direction2 = new Vector2(-10, 0);
+                vertex1.Position.Bar = index;
+                var vertex2 = new LongNoteVertex();
+                vertex2.Degree = (10 * (index + 4));
+                vertex2.Width = 40;
+                vertex2.Position.Bar = index + 1;
+                vertex2.Direction1 = new Vector2(-10, 0);
+                longNote.LongNoteVertices.Add(vertex1);
+                longNote.LongNoteVertices.Add(vertex2);
+                Chart.LongNotes.Add(longNote);
+            }
+        }
+
+        private void AddLongNote3()
+        {
+            for (int index = 0; index < 100; index += 1)
+            {
+                var longNote = new LongNote();
+                var vertex1 = new LongNoteVertex();
+                vertex1.Degree = (10 * index);
+                vertex1.Width = 10;
+                vertex1.Direction2 = new Vector2(-20 + (index & 1) * 40, 0);
+                vertex1.Position.Bar = index;
+                var vertex2 = new LongNoteVertex();
+                vertex2.Degree = (10 * index);
+                vertex2.Width = 10;
+                vertex2.Position.Bar = index + 1;
+                vertex2.Direction1 = new Vector2(-20 + (index & 1) * 40, 0);
+                longNote.LongNoteVertices.Add(vertex1);
+                longNote.LongNoteVertices.Add(vertex2);
+                Chart.LongNotes.Add(longNote);
             }
         }
 
@@ -288,12 +269,6 @@ namespace Beatale.ChartSystem
                 timePerFrame = (float)Chart.BPMChanges[BPMIndex].BPM * (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f * (float)constant * speed;
                 BPMIndex++;
             }
-            //ChartTime += (60.0f / (float)Chart.BPMChanges[BPMIndex].BPM) * Time.deltaTime;
-            //ChartTime += ((float)Chart.BPMChanges[BPMIndex].BPM) * Time.deltaTime;
-            //ChartTime += Time.deltaTime;
-            //ChartTime += (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f * Time.deltaTime;
-            //ChartTime += (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f * (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f / (float)constant * speed * Time.deltaTime;
-            //ChartTime += (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f * (float)Chart.BPMChanges[BPMIndex].BPM * (float)constant * speed * Time.deltaTime;
             ChartTime += timePerFrame * Time.deltaTime;
         }
 
@@ -313,12 +288,12 @@ namespace Beatale.ChartSystem
 
         private void Project()
         {
+            var distanceMultiplier = 1.0f / TunnelMeshBender.BentMesh.Length;
             routeSamples.Clear();
             for (int index = 0; index < Chart.Notes.Count; index++)
             {
-                //float timeDifference = (float)Chart.Notes[index].Position.Time - TunnelManager.PlayTime;
                 float timeDifference = (float)Chart.Notes[index].Position.Time - ChartTime;
-                float distance = timeDifference * TunnelSpeed * TunnelManager.BPM;
+                float distance = timeDifference * TunnelSpeed;
                 if (distance > TunnelMeshBender.BentMesh.Length - suddenOffset) break;
                 if (distance <= 0.0f)
                 {
@@ -330,7 +305,7 @@ namespace Beatale.ChartSystem
                     continue;
                 }
 
-                var noteInterval = distance / TunnelMeshBender.BentMesh.Length;
+                var noteInterval = distance * distanceMultiplier;
                 distance += TunnelMeshBender.Distance;
                 RouteSample routeSample;
                 if (!routeSamples.TryGetValue(distance, out routeSample))
@@ -348,14 +323,57 @@ namespace Beatale.ChartSystem
                     Chart.Notes[index].TunnelObject = NotePool.GetObject();
                 }
                 Chart.Notes[index].TunnelObject.transform.position = position;
-                Chart.Notes[index].TunnelObject.SetActive(true);
+                Chart.Notes[index].TunnelObject.gameObject.SetActive(true);
             }
 
-            //for (int index = 0; index < Chart.LongNotes.Count; index++)
-            //{
-            //    float timeStartDifference = (float)Chart.LongNotes[index].StartTime - ChartTime;
-            //    float 
-            //}
+            for (int index = 0; index < Chart.LongNotes.Count; index++)
+            {
+                var longNote = Chart.LongNotes[index];
+                float timeStartDifference = ((float)longNote.StartTime - ChartTime) * TunnelSpeed;
+                float timeEndDifference = ((float)longNote.EndTime - ChartTime) * TunnelSpeed;
+                if (timeStartDifference > TunnelMeshBender.BentMesh.Length - suddenOffset) continue;
+                if (timeEndDifference <= 0.0f)
+                {
+                    if (longNote.TunnelObject == null) continue;
+                    var gameObject = longNote.TunnelObject;
+                    longNote.TunnelObject = null;
+                    LongNotePool.RestoreObject(gameObject);
+                    SoundEffectTest.PlayOneShot(SoundEffectTest.clip);
+                    continue;
+                }
+
+                for (int vertexIndex = 0; vertexIndex < longNote.LongNoteMesh.AngleVertices.Length; vertexIndex++)
+                {
+                    var vertex = longNote.LongNoteMesh.AngleVertices[vertexIndex];
+                    float distance = ((float)vertex.Time - ChartTime) * TunnelSpeed;
+                   
+                    if (distance > TunnelMeshBender.BentMesh.Length - suddenOffset) distance = TunnelMeshBender.BentMesh.Length - suddenOffset;
+                    if (distance <= 0.0f) distance = 0.0f;
+
+                    var noteInterval = distance * distanceMultiplier;
+                    distance += TunnelMeshBender.Distance;
+
+                    RouteSample routeSample;
+                    if (!routeSamples.TryGetValue(distance, out routeSample))
+                    {
+                        routeSample = RouteSpline.GetRouteSample(distance);
+                        routeSamples[distance] = routeSample;
+                    }
+
+                    var direction = Quaternion.AngleAxis(vertex.Degree, routeSample.Direction) * routeSample.Up;
+                    var position = routeSample.Position + direction * GetRadius(noteInterval);
+                    longNote.LongNoteMesh.Vertices[vertexIndex] = position;
+                }
+
+                if (longNote.TunnelObject == null)
+                {
+                    longNote.TunnelObject = LongNotePool.GetObject();
+                    longNote.TunnelObject.transform.position = Vector3.zero;
+                    longNote.TunnelObject.gameObject.SetActive(true);
+                    longNote.TunnelObject.InitializeMesh(longNote.LongNoteMesh);
+                }
+                longNote.TunnelObject.UpdateMesh(longNote.LongNoteMesh);
+            }
         }
     }
 }
