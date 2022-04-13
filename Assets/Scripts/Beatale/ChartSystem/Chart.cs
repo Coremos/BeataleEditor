@@ -35,7 +35,10 @@ namespace Beatale.ChartSystem
     {
         public float Time;
         public float Degree;
+        public float Width;
+
         public NotePosition Position;
+
         public GameObject TimeLineObject;
         public NoteTestObject TunnelObject;
         public Vector3 TunnelPosition;
@@ -56,7 +59,7 @@ namespace Beatale.ChartSystem
     {
         public float Degree;
         public float Width;
-        public float Time;
+
         public NotePosition Position;
         public Vector2 Direction1;
         public Vector2 Direction2;
@@ -66,7 +69,6 @@ namespace Beatale.ChartSystem
     {
         public double StartTime;
         public double EndTime;
-        public float Length;
 
         public List<LongNoteVertex> LongNoteVertices;
         public List<LongNoteSample> LongNoteSamples;

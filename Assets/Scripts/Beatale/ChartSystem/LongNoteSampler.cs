@@ -6,7 +6,7 @@ namespace Beatale.ChartSystem
 {
     public class LongNoteSampler
     {
-        private const int DEFAULT_RESOLUTION = 30;
+        private const int DEFAULT_RESOLUTION = 20;
 
         public static void LongNoteSampling(List<LongNote> longNotes)
         {
