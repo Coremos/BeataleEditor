@@ -157,12 +157,7 @@ namespace Beatale.ChartSystem
         {
             Chart = new Chart();
             var startBPM = new BPMChange();
-            //startBPM.BPM = 174;
-            //startBPM.BPM = 175;
-            //startBPM.BPM = 153;
             startBPM.BPM = 140;
-            //startBPM.BPM = 240;
-            //startBPM.BPM = 60;
 
             Chart.BPMChanges.Add(startBPM);
             //var devide = 4;
