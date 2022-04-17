@@ -15,6 +15,24 @@ namespace Beatale.ChartSystem
             }
         }
 
+        delegate void CalculateExpression();
+
+        public static void CalculateAdjustTime(Chart chart)
+        {
+            chart.BPMChanges[0].Position.Time = 0.0;
+            for (int index = 1; index < chart.BPMChanges.Count; index++)
+            {
+                var fractionValue = 0.0;
+                var position = chart.BPMChanges[index].Position - chart.BPMChanges[index - 1].Position;
+
+                if (position.Denominator != 0) fractionValue = (position.Numerator) / (double)position.Denominator;
+
+                chart.BPMChanges[index].Position.Time = chart.BPMChanges[index - 1].Position.Time +
+                    60.0 / chart.BPMChanges[index - 1].BPM *
+                    (position.Bar + fractionValue);
+            }
+        }
+
         public static void CalculateBPMTime(Chart chart)
         {
             chart.BPMChanges[0].Position.Time = 0.0;
