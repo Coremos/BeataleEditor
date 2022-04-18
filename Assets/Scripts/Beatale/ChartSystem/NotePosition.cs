@@ -5,6 +5,7 @@
         public int Bar;
         public int Numerator;
         public int Denominator;
+        public float Interval;
         public double Time;
 
         public static NotePosition operator -(NotePosition position1, NotePosition position2)
