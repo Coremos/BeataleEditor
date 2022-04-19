@@ -145,7 +145,6 @@ namespace Beatale.ChartSystem
             for (int index = 0; index < 5000; index++)
             {
                 var note = new Note();
-                note.Time = index * 0.1f;
                 note.Degree = index * 10;
                 note.TunnelObject = null;
                 note.TunnelPosition = Vector3.zero;

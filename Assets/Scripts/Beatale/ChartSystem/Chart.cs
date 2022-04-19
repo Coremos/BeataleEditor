@@ -33,7 +33,6 @@ namespace Beatale.ChartSystem
 
     public class Note
     {
-        public float Time;
         public float Degree;
         public float Width;
 
