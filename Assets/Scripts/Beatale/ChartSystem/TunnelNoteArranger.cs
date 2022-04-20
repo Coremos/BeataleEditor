@@ -138,20 +138,6 @@ namespace Beatale.ChartSystem
             }
         }
 
-        private void MakeChartTest1()
-        {
-            Chart = new Chart();
-            Chart.Notes = new List<Note>();
-            for (int index = 0; index < 5000; index++)
-            {
-                var note = new Note();
-                note.Degree = index * 10;
-                note.TunnelObject = null;
-                note.TunnelPosition = Vector3.zero;
-                Chart.Notes.Add(note);
-            }
-        }
-
         private void MakeChartTest()
         {
             Chart = new Chart();
@@ -185,51 +171,6 @@ namespace Beatale.ChartSystem
             //}
 
             AddLongNote3();
-        }
-
-        private void AddLongNote()
-        {
-            var longNote = new LongNote();
-            var vertex1 = new LongNoteVertex();
-            vertex1.Degree = 0;
-            vertex1.Width = 20;
-            vertex1.Direction2 = new Vector2(0, 0);
-            vertex1.Position.Bar = 0;
-            var vertex2 = new LongNoteVertex();
-            vertex2.Degree = 360;
-            vertex2.Width = 40;
-            vertex2.Position.Bar = 10;
-            vertex2.Direction1 = new Vector2(0, 0);
-            var vertex3 = new LongNoteVertex();
-            vertex3.Degree = 360;
-            vertex3.Width = 20;
-            vertex3.Position.Bar = 60;
-            longNote.LongNoteVertices.Add(vertex1);
-            longNote.LongNoteVertices.Add(vertex2);
-            longNote.LongNoteVertices.Add(vertex3);
-            Chart.LongNotes.Add(longNote);
-        }
-
-        private void AddLongNote2()
-        {
-
-            for (int index = 0; index < 10; index += 2)
-            {
-                var longNote = new LongNote();
-                var vertex1 = new LongNoteVertex();
-                vertex1.Degree = (10 * index);
-                vertex1.Width = 20;
-                vertex1.Direction2 = new Vector2(-10, 0);
-                vertex1.Position.Bar = index;
-                var vertex2 = new LongNoteVertex();
-                vertex2.Degree = (10 * (index + 4));
-                vertex2.Width = 40;
-                vertex2.Position.Bar = index + 1;
-                vertex2.Direction1 = new Vector2(-10, 0);
-                longNote.LongNoteVertices.Add(vertex1);
-                longNote.LongNoteVertices.Add(vertex2);
-                Chart.LongNotes.Add(longNote);
-            }
         }
 
         private void AddLongNote3()
