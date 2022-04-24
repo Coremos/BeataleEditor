@@ -40,10 +40,8 @@ namespace Beatale.ChartSystem
         {
             routeSamples = new Dictionary<float, RouteSample>();
             MakeChartTest();
-            ChartIntervalCalculator.CalculateBPM(Chart);
-            ChartIntervalCalculator.CalculateChart(Chart);
-
-            ChartTimeCalculator.CalculateBPM(Chart);
+            ChartCalculator.CalculateBPM(Chart);
+            ChartCalculator.CalculateChart(Chart);
 
             TunnelMeshGenerator.GenerateTunnelMesh();
             radiusTable = TunnelMeshGenerator.RadiusTable;
