@@ -66,8 +66,8 @@ namespace Beatale.ChartSystem
 
     public class LongNote
     {
-        public double StartTime;
-        public double EndTime;
+        public double StartInterval;
+        public double EndInterval;
 
         public List<LongNoteVertex> LongNoteVertices;
         public List<LongNoteSample> LongNoteSamples;

@@ -13,8 +13,8 @@ namespace Beatale.ChartSystem
             for (int index = 0; index < longNotes.Count; index++)
             {
                 longNotes[index].LongNoteSamples = GetLongNoteSamples(longNotes[index]);
-                longNotes[index].StartTime = longNotes[index].LongNoteSamples[0].Time;
-                longNotes[index].EndTime = longNotes[index].LongNoteSamples[longNotes[index].LongNoteSamples.Count - 1].Time;
+                longNotes[index].StartInterval = longNotes[index].LongNoteSamples[0].Interval;
+                longNotes[index].EndInterval = longNotes[index].LongNoteSamples[longNotes[index].LongNoteSamples.Count - 1].Interval;
             }
         }
 
@@ -44,8 +44,9 @@ namespace Beatale.ChartSystem
                     var point = CubicCurve.GetPoint(vector1, direction1, direction2, vector2, t);
                     var degree = point.x;
                     var width = vertex1.Width + t * (vertex2.Width - vertex1.Width);
+                    var interval = vertex1.Position.Interval + t * (vertex2.Position.Interval - vertex1.Position.Interval);
                     var time = vertex1.Position.Time + t * (vertex2.Position.Time - vertex1.Position.Time);
-                    samples.Add(new LongNoteSample(degree, width, time));
+                    samples.Add(new LongNoteSample(degree, width, interval, time));
                 }
             }
             return samples;

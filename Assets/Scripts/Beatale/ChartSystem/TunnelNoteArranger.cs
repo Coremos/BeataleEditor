@@ -49,7 +49,7 @@ namespace Beatale.ChartSystem
             LongNoteSampler.LongNoteSampling(Chart.LongNotes);
             LongNoteArranger.Project(Chart);
             //DebugChart(Chart);
-            DebugLongNote(Chart);
+            //DebugLongNote(Chart);
             //LongNoteArranger.DebugLongNoteMeshes(Chart);
         }
 
@@ -139,7 +139,7 @@ namespace Beatale.ChartSystem
             if (Input.GetKeyDown(KeyCode.A)) isMove = !isMove; timePerFrame = (float)Chart.BPMChanges[BPMIndex].BPM * (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f * (float)constant * speed;
 
             if (!isMove) return;
-            if ((BPMIndex < Chart.BPMChanges.Count - 1) && (ChartTime > Chart.BPMChanges[BPMIndex + 1].Position.Time))
+            if ((BPMIndex < Chart.BPMChanges.Count - 1) && (ChartTime > Chart.BPMChanges[BPMIndex + 1].Position.Interval))
             {
                 timePerFrame = (float)Chart.BPMChanges[BPMIndex].BPM * (float)Chart.BPMChanges[BPMIndex].BPM / 60.0f * (float)constant * speed;
                 BPMIndex++;
@@ -167,7 +167,7 @@ namespace Beatale.ChartSystem
             routeSamples.Clear();
             for (int index = 0; index < Chart.Notes.Count; index++)
             {
-                float timeDifference = (float)Chart.Notes[index].Position.Time - ChartTime;
+                float timeDifference = (float)Chart.Notes[index].Position.Interval - ChartTime;
                 float distance = timeDifference * TunnelSpeed;
                 if (distance > TunnelMeshBender.BentMesh.Length - suddenOffset) break;
                 if (distance <= 0.0f)
@@ -204,8 +204,8 @@ namespace Beatale.ChartSystem
             for (int index = 0; index < Chart.LongNotes.Count; index++)
             {
                 var longNote = Chart.LongNotes[index];
-                float timeStartDifference = ((float)longNote.StartTime - ChartTime) * TunnelSpeed;
-                float timeEndDifference = ((float)longNote.EndTime - ChartTime) * TunnelSpeed;
+                float timeStartDifference = ((float)longNote.StartInterval - ChartTime) * TunnelSpeed;
+                float timeEndDifference = ((float)longNote.EndInterval - ChartTime) * TunnelSpeed;
                 if (timeStartDifference > TunnelMeshBender.BentMesh.Length - suddenOffset) continue;
                 if (timeEndDifference <= 0.0f)
                 {
@@ -220,7 +220,7 @@ namespace Beatale.ChartSystem
                 for (int vertexIndex = 0; vertexIndex < longNote.LongNoteMesh.AngleVertices.Length; vertexIndex++)
                 {
                     var vertex = longNote.LongNoteMesh.AngleVertices[vertexIndex];
-                    float distance = ((float)vertex.Time - ChartTime) * TunnelSpeed;
+                    float distance = ((float)vertex.Interval - ChartTime) * TunnelSpeed;
                    
                     if (distance > TunnelMeshBender.BentMesh.Length - suddenOffset) distance = TunnelMeshBender.BentMesh.Length - suddenOffset;
                     if (distance <= 0.0f) distance = 0.0f;

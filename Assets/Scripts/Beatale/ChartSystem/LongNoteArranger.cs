@@ -7,7 +7,7 @@ namespace Beatale.ChartSystem
     {
         public static void Project(Chart chart)
         {
-            var angleStep = 360.0 / 64.0;
+            var angleStep = 360.0f / 64.0f;
             for (int index = 0; index < chart.LongNotes.Count; index++)
             {
                 var noteMesh = new LongNoteMesh();
@@ -20,18 +20,18 @@ namespace Beatale.ChartSystem
                     var halfDegree = longNoteSamples[sampleIndex].Width * 0.5f;
                     float startAngle = longNoteSamples[sampleIndex].Degree - halfDegree;
                     float endAngle = longNoteSamples[sampleIndex].Degree + halfDegree;
-                    vertices.Add(new AngleVertex((float)startAngle, longNoteSamples[sampleIndex].Time));
+                    vertices.Add(new AngleVertex(startAngle, longNoteSamples[sampleIndex].Interval));
 
-                    for (var angle = -360.0; angle < endAngle; angle += angleStep)
+                    for (var angle = -360.0f; angle < endAngle; angle += angleStep)
                     {
                         if (angle > startAngle)
                         {
-                            var vertex = new AngleVertex((float)angle, longNoteSamples[sampleIndex].Time);
+                            var vertex = new AngleVertex(angle, longNoteSamples[sampleIndex].Interval);
 
                             vertices.Add(vertex);
                         }
                     }
-                    vertices.Add(new AngleVertex((float)endAngle, longNoteSamples[sampleIndex].Time));
+                    vertices.Add(new AngleVertex(endAngle, longNoteSamples[sampleIndex].Interval));
                     verticesList.Add(vertices);
                 }
                 
@@ -102,8 +102,8 @@ namespace Beatale.ChartSystem
         {
             var uvs = new List<Vector2>();
 
-            var rowStart = verticesList[0][0].Time;
-            var rowStep = 1.0f / (verticesList[verticesList.Count - 1][0].Time - rowStart);
+            var rowStart = verticesList[0][0].Interval;
+            var rowStep = 1.0f / (verticesList[verticesList.Count - 1][0].Interval - rowStart);
 
             for (int row = 0; row < verticesList.Count; row++)
             {
@@ -112,7 +112,7 @@ namespace Beatale.ChartSystem
                 
                 for (int column = 0; column < verticesList[row].Count; column++)
                 {
-                    var uv = new Vector2((verticesList[row][column].Degree - columnStart) * columnStep, (float)((verticesList[row][0].Time - rowStart) * rowStep));
+                    var uv = new Vector2((verticesList[row][column].Degree - columnStart) * columnStep, (float)((verticesList[row][0].Interval - rowStart) * rowStep));
                     uvs.Add(uv);
                     //Debug.Log(row + "row / " + column + "col : " + (verticesList[row][column].Degree - columnStart) * columnStep + "도, "+ (verticesList[row][0].Time - rowStart) * rowStep);
                 }
@@ -127,7 +127,7 @@ namespace Beatale.ChartSystem
             {
                 for (int column = 0; column < verticesList[index].Count; column++)
                 {
-                    Debug.Log(index + "row / " + column + "col : " + verticesList[index][column].Degree + "도, "+ verticesList[index][column].Time);
+                    Debug.Log(index + "row / " + column + "col : " + verticesList[index][column].Degree + "도, "+ verticesList[index][column].Interval);
                 }
             }
         }

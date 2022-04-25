@@ -5,12 +5,12 @@ namespace Beatale.ChartSystem
     public struct AngleVertex
     {
         public float Degree;
-        public double Time;
+        public double Interval;
 
-        public AngleVertex(float degree, double time)
+        public AngleVertex(float degree, double interval)
         {
             Degree = degree;
-            Time = time;
+            Interval = interval;
         }
     }
 
