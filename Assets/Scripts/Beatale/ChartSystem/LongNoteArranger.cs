@@ -17,9 +17,9 @@ namespace Beatale.ChartSystem
                 for (int sampleIndex = 0; sampleIndex < longNoteSamples.Count; sampleIndex++)
                 {
                     var vertices = new List<AngleVertex>();
-                    var halfDegree = longNoteSamples[sampleIndex].Width * 0.5f;
-                    float startAngle = longNoteSamples[sampleIndex].Degree - halfDegree;
-                    float endAngle = longNoteSamples[sampleIndex].Degree + halfDegree;
+                    var halfWidth = longNoteSamples[sampleIndex].Width;
+                    float startAngle = longNoteSamples[sampleIndex].Degree - halfWidth;
+                    float endAngle = longNoteSamples[sampleIndex].Degree + halfWidth;
                     vertices.Add(new AngleVertex(startAngle, longNoteSamples[sampleIndex].Interval));
 
                     for (var angle = -360.0f; angle < endAngle; angle += angleStep)
