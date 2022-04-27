@@ -25,12 +25,6 @@ namespace Beatale.ChartSystem
 
     public enum NoteType { None = -1, Tap, Long }
 
-    
-    public class ChartObject
-    {
-        NotePosition Position;
-    }
-
     public class Note
     {
         public float Degree;
@@ -41,16 +35,33 @@ namespace Beatale.ChartSystem
         public GameObject TimeLineObject;
         public NoteTestObject TunnelObject;
         public Vector3 TunnelPosition;
+        public NoteObjectPool Pool;
 
         public Note()
         {
             Position = new NotePosition();
+            TimeLineObject = null;
         }
 
         public Note CopyDeep(Note note)
         {
             Note newNote = new Note();
             return newNote;
+        }
+
+        public void SetNote(NoteObjectPool pool)
+        {
+            Pool = pool;
+            TunnelObject = Pool.GetObject();
+            TunnelObject.gameObject.SetActive(true);
+        }
+
+        public void ReleaseNote()
+        {
+            if (TunnelObject == null) return;
+            var gameObject = TunnelObject;
+            TunnelObject = null;
+            Pool.ReleaseObject(gameObject);
         }
     }
 
@@ -66,17 +77,44 @@ namespace Beatale.ChartSystem
 
     public class LongNote
     {
-        public double StartInterval;
-        public double EndInterval;
+        public double TimeStart;
+        public double TimeEnd;
+        public float IntervalStart;
+        public float IntervalEnd;
 
         public List<LongNoteVertex> LongNoteVertices;
         public List<LongNoteSample> LongNoteSamples;
         public LongNoteMesh LongNoteMesh;
         public LongNoteObject TunnelObject;
+        public LongNoteObjectPool Pool;
 
         public LongNote()
         {
             LongNoteVertices = new List<LongNoteVertex>();
+            LongNoteMesh = null;
+            Pool = null;
+        }
+
+        public void SetNote(LongNoteObjectPool pool)
+        {
+            Pool = pool;
+            TunnelObject = pool.GetObject();
+            TunnelObject.transform.position = Vector3.zero;
+            TunnelObject.gameObject.SetActive(true);
+            TunnelObject.InitializeMesh(LongNoteMesh);
+        }
+
+        public void ReleaseNote()
+        {
+            if (TunnelObject == null) return;
+            var gameObject = TunnelObject;
+            TunnelObject = null;
+            Pool.ReleaseObject(gameObject);
+        }
+
+        public void UpdateMesh()
+        {
+            TunnelObject.UpdateMesh(LongNoteMesh);
         }
     }
 
