@@ -13,8 +13,8 @@ namespace Beatale.ChartSystem
             for (int index = 0; index < longNotes.Count; index++)
             {
                 longNotes[index].LongNoteSamples = GetLongNoteSamples(longNotes[index]);
-                longNotes[index].StartInterval = longNotes[index].LongNoteSamples[0].Interval;
-                longNotes[index].EndInterval = longNotes[index].LongNoteSamples[longNotes[index].LongNoteSamples.Count - 1].Interval;
+                longNotes[index].IntervalStart = longNotes[index].LongNoteSamples[0].Interval;
+                longNotes[index].IntervalEnd = longNotes[index].LongNoteSamples[longNotes[index].LongNoteSamples.Count - 1].Interval;
             }
         }
 
